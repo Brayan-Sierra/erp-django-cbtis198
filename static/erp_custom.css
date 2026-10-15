@@ -90,45 +90,78 @@
     border-bottom: 1px solid #333333 !important;
 }
 
-/* Reemplazar la "A" del círculo del usuario por la Clave de Fa en negro */
+.brand-text {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px;
+}
+
+/* ── REEMPLAZO DE AVATAR Y LOGO DE LOGIN POR CLAVE DE FA (𝄢) ── */
+
+/* Ocultar iconos de usuario/avatar por defecto en Admin y Login */
 .user-panel .image,
 .nav-link .user-image,
 .brand-image,
 .avatar-circle,
-.img-circle {
+.img-circle,
+.login-logo img,
+.login-box-msg i {
     display: none !important;
 }
 
-/* Insertar Clave de Fa en lugar del avatar circular */
-.user-panel::before,
-.usermenu-avatar::before {
+/* Clave de Fa en el sidebar de usuario */
+.user-panel::before {
     content: "𝄢" !important;
-    font-size: 1.5rem !important;
+    font-size: 1.4rem !important;
     font-weight: bold !important;
     color: #000000 !important;
     background-color: #ffffff !important;
     border-radius: 50% !important;
-    width: 35px !important;
-    height: 35px !important;
+    width: 32px !important;
+    height: 32px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin-right: 8px !important;
+    margin-right: 10px !important;
     border: 1px solid #000000 !important;
 }
 
-/* Colores individuales para cada letra de "ERP Django" */
-.logo-e { color: #FF4136 !important; font-weight: bold; } /* Rojo */
-.logo-r { color: #FF851B !important; font-weight: bold; } /* Naranja */
-.logo-p { color: #FFDC00 !important; font-weight: bold; } /* Amarillo */
-.logo-d { color: #2ECC40 !important; font-weight: bold; } /* Verde */
-.logo-j { color: #0074D9 !important; font-weight: bold; } /* Azul */
-.logo-a { color: #7FDBFF !important; font-weight: bold; } /* Celeste */
-.logo-n { color: #B10DC9 !important; font-weight: bold; } /* Púrpura */
-.logo-g { color: #F012BE !important; font-weight: bold; } /* Rosa */
-.logo-o { color: #01FF70 !important; font-weight: bold; } /* Verde Lima */
+/* Clave de Fa en el icono de usuario de la barra superior derecha */
+.nav-item.dropdown.user-menu .nav-link::before {
+    content: "𝄢" !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #000000 !important;
+    background-color: #f4f6f9 !important;
+    border-radius: 50% !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid #cccccc !important;
+}
 
-/* Fondo general de la aplicación en blanco */
+/* Clave de Fa destacada en la pantalla de Inicio de Sesión (Login) */
+.login-logo a::before {
+    content: "𝄢 " !important;
+    font-size: 2.2rem !important;
+    font-weight: bold !important;
+    color: #000000 !important;
+}
+
+/* Fondo de pantalla de Login e interfaz general */
+.login-page, .register-page {
+    background-color: #f4f6f9 !important;
+}
+
+.login-box .card {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid #111111 !important;
+}
+
+/* Fondo general de la aplicación */
 .content-wrapper, .main-footer {
     background-color: #ffffff !important;
     color: #111111 !important;

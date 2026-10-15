@@ -110,8 +110,7 @@ JAZZMIN_SETTINGS = {
     # Identidad
     'site_title':       'ERP Django',
     'site_header':      'ERP CBTis198',
-    # Usamos spans con clases CSS para darle color individual a cada letra de ERP Django
-    'site_brand':       '𝄢 <span class="logo-e">E</span><span class="logo-r">R</span><span class="logo-p">P</span> <span class="logo-d">D</span><span class="logo-j">j</span><span class="logo-a">a</span><span class="logo-n">n</span><span class="logo-g">g</span><span class="logo-o">o</span>',
+    'site_brand':       '𝄢 ERP Django',  # ← Texto limpio con Clave de Fa
     'welcome_sign':     '𝄢 Bienvenido al Sistema ERP · CBTis198 Celaya',
     'copyright':        'Brayan Enrique Sierra Rivera · CBTis198 Celaya',
 
@@ -178,13 +177,13 @@ JAZZMIN_UI_TWEAKS = {
     'brand_small_text':         False,
     'brand_colour':             'navbar-dark',
     'accent':                   'accent-dark',
-    'navbar':                   'navbar-white navbar-light', # Header en blanco
+    'navbar':                   'navbar-white navbar-light',
     'no_navbar_border':         False,
     'navbar_fixed':             True,
     'layout_boxed':             False,
     'footer_fixed':             False,
     'sidebar_fixed':            True,
-    'sidebar':                  'sidebar-dark-primary', # Sidebar oscuro/negro
+    'sidebar':                  'sidebar-dark-primary',
     'sidebar_nav_small_text':   False,
     'sidebar_disable_expand':   False,
     'sidebar_nav_child_indent': True,
