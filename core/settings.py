@@ -110,56 +110,56 @@ JAZZMIN_SETTINGS = {
     # Identidad
     'site_title':       'ERP Django',
     'site_header':      'ERP CBTis198',
-    'site_brand':       '𝄢 ERP Django',  # Clave de Fa reemplazando la caja
-    'welcome_sign':     '𝄢 bienvenido al Sistema ERP · CBTis198 Celaya',
+    'site_brand':       '𝄢 ERP Django',  # ← Clave de Fa
+    'welcome_sign':     '𝄢 Bienvenido al Sistema ERP · CBTis198 Celaya',
     'copyright':        'Brayan Enrique Sierra Rivera · CBTis198 Celaya',
 
-    # Icono del sitio / Pestaña del navegador
+    # Icono del sitio
     'site_icon':        None,
     'site_logo':        None,
 
     # Búsqueda global en el admin
     'search_model':     ['clientes.Cliente', 'productos.Producto'],
 
-    # Menú superior (top navigation)
+    # Menú superior
     'topmenu_links': [
-        {'name': 'Inicio ERP',   'url': '/', 'new_window': False, 'icon': 'fas fa-home'},
-        {'name': 'Productos',    'url': '/productos/', 'icon': 'fas fa-box-open'},
-        {'name': 'Clientes',     'url': '/clientes/', 'icon': 'fas fa-users'},
-        {'name': 'Ventas',       'url': '/ventas/', 'icon': 'fas fa-cash-register'},
+        {'name': 'Inicio ERP',   'url': '/', 'new_window': False},
+        {'name': 'Productos',    'url': '/productos/'},
+        {'name': 'Clientes',     'url': '/clientes/'},
+        {'name': 'Ventas',       'url': '/ventas/'},
     ],
 
-    # Menú de usuario (avatar)
+    # Menú de usuario
     'usermenu_links': [
-        {'name': 'Ver ERP', 'url': '/', 'new_window': False, 'icon': 'fas fa-globe'},
+        {'name': 'Ver ERP', 'url': '/', 'new_window': False},
     ],
 
-    # Menú lateral: orden de apps y modelos
+    # Orden de apps
     'order_with_respect_to': [
         'clientes', 'proveedores', 'productos',
         'ventas', 'configuracion', 'auth',
     ],
 
-    # Iconos de Font Awesome con colores y variedad
+    # Iconos Font Awesome
     'icons': {
-        'auth':                       'fas fa-user-shield',
-        'auth.user':                  'fas fa-user-astronaut',
-        'auth.Group':                 'fas fa-users-cog',
-        'clientes.Cliente':           'fas fa-id-card',
-        'proveedores.Proveedor':      'fas fa-shipping-fast',
-        'productos.Categoria':        'fas fa-layer-group',
-        'productos.Producto':         'fas fa-cubes',
+        'auth':                       'fas fa-users-cog',
+        'auth.user':                  'fas fa-user',
+        'auth.Group':                 'fas fa-users',
+        'clientes.Cliente':           'fas fa-user-tie',
+        'proveedores.Proveedor':      'fas fa-truck',
+        'productos.Categoria':        'fas fa-tags',
+        'productos.Producto':         'fas fa-box',
         'ventas.Venta':               'fas fa-file-invoice-dollar',
-        'ventas.DetalleVenta':        'fas fa-receipt',
-        'ventas.Pedido':              'fas fa-shopping-basket',
-        'configuracion.ConfiguracionERP': 'fas fa-sliders-h',
+        'ventas.DetalleVenta':        'fas fa-list',
+        'ventas.Pedido':              'fas fa-shopping-cart',
+        'configuracion.ConfiguracionERP': 'fas fa-cogs',
     },
-    'default_icon_parents': 'fas fa-folder-open',
-    'default_icon_children': 'fas fa-dot-circle',
+    'default_icon_parents': 'fas fa-folder',
+    'default_icon_children': 'fas fa-circle',
 
     # Apariencia
     'related_modal_active':     True,
-    'custom_css':               'erp_custom.css',   # Personalización de estilos
+    'custom_css':               'erp_custom.css',
     'show_sidebar':             True,
     'navigation_expanded':      True,
     'hide_apps':                [],
@@ -172,29 +172,28 @@ JAZZMIN_SETTINGS = {
 
 JAZZMIN_UI_TWEAKS = {
     'navbar_small_text':        False,
-    'footer_small_text':        True,
+    'footer_small_text':        False,
     'body_small_text':          False,
     'brand_small_text':         False,
-    'brand_colour':             'navbar-navy',
-    'accent':                   'accent-warning',    # Acentos en dorado/amarillo brillante
-    'navbar':                   'navbar-dark navbar-navy',
-    'no_navbar_border':         True,
+    'brand_colour':             'navbar-dark',
+    'accent':                   'accent-warning',
+    'navbar':                   'navbar-dark',
+    'no_navbar_border':         False,
     'navbar_fixed':             True,
     'layout_boxed':             False,
     'footer_fixed':             False,
     'sidebar_fixed':            True,
-    'sidebar':                  'sidebar-dark-warning', # Destaca opciones seleccionadas
+    'sidebar':                  'sidebar-dark-navy',
     'sidebar_nav_small_text':   False,
     'sidebar_disable_expand':   False,
     'sidebar_nav_child_indent': True,
     'sidebar_nav_compact_style': False,
     'sidebar_nav_legacy_style': False,
     'sidebar_nav_flat_style':   False,
-    'theme':                    'darkly',           # Tema moderno de alto contraste
-    'default_theme_mode':       'dark',
+    'theme':                    'default',
     'button_classes': {
-        'primary':   'btn-outline-primary',
-        'secondary': 'btn-outline-secondary',
+        'primary':   'btn-primary',
+        'secondary': 'btn-secondary',
         'info':      'btn-info',
         'warning':   'btn-warning',
         'danger':    'btn-danger',
