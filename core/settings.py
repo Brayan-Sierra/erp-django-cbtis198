@@ -109,29 +109,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 JAZZMIN_SETTINGS = {
     # Identidad
     'site_title':       'ERP Django',
-    'site_header':      'ERP UTEC Celaya',
-    'site_brand':       '📦 ERP Django',
-    'welcome_sign':     'Bienvenido al Sistema ERP · UTEC Celaya',
-    'copyright':        'MC. Román Fernando López González · UTEC Celaya',
+    'site_header':      'ERP CBTis198',
+    'site_brand':       '𝄢 ERP Django',  # Clave de Fa reemplazando la caja
+    'welcome_sign':     '𝄢 bienvenido al Sistema ERP · CBTis198 Celaya',
+    'copyright':        'Brayan Enrique Sierra Rivera · CBTis198 Celaya',
 
-    # Icono del sitio (usar emoji como fallback)
+    # Icono del sitio / Pestaña del navegador
     'site_icon':        None,
-    'site_logo':        None,    # ruta a logo en static/ (agregar en W11+)
+    'site_logo':        None,
 
     # Búsqueda global en el admin
     'search_model':     ['clientes.Cliente', 'productos.Producto'],
 
     # Menú superior (top navigation)
     'topmenu_links': [
-        {'name': 'Inicio ERP',   'url': '/', 'new_window': False},
-        {'name': 'Productos',    'url': '/productos/'},
-        {'name': 'Clientes',     'url': '/clientes/'},
-        {'name': 'Ventas',       'url': '/ventas/'},
+        {'name': 'Inicio ERP',   'url': '/', 'new_window': False, 'icon': 'fas fa-home'},
+        {'name': 'Productos',    'url': '/productos/', 'icon': 'fas fa-box-open'},
+        {'name': 'Clientes',     'url': '/clientes/', 'icon': 'fas fa-users'},
+        {'name': 'Ventas',       'url': '/ventas/', 'icon': 'fas fa-cash-register'},
     ],
 
     # Menú de usuario (avatar)
     'usermenu_links': [
-        {'name': 'Ver ERP', 'url': '/', 'new_window': False},
+        {'name': 'Ver ERP', 'url': '/', 'new_window': False, 'icon': 'fas fa-globe'},
     ],
 
     # Menú lateral: orden de apps y modelos
@@ -140,26 +140,26 @@ JAZZMIN_SETTINGS = {
         'ventas', 'configuracion', 'auth',
     ],
 
-    # Iconos de Font Awesome para cada modelo
+    # Iconos de Font Awesome con colores y variedad
     'icons': {
-        'auth':                       'fas fa-users-cog',
-        'auth.user':                  'fas fa-user',
-        'auth.Group':                 'fas fa-users',
-        'clientes.Cliente':           'fas fa-user-tie',
-        'proveedores.Proveedor':      'fas fa-truck',
-        'productos.Categoria':        'fas fa-tags',
-        'productos.Producto':         'fas fa-box',
+        'auth':                       'fas fa-user-shield',
+        'auth.user':                  'fas fa-user-astronaut',
+        'auth.Group':                 'fas fa-users-cog',
+        'clientes.Cliente':           'fas fa-id-card',
+        'proveedores.Proveedor':      'fas fa-shipping-fast',
+        'productos.Categoria':        'fas fa-layer-group',
+        'productos.Producto':         'fas fa-cubes',
         'ventas.Venta':               'fas fa-file-invoice-dollar',
-        'ventas.DetalleVenta':        'fas fa-list',
-        'ventas.Pedido':              'fas fa-shopping-cart',
-        'configuracion.ConfiguracionERP': 'fas fa-cogs',
+        'ventas.DetalleVenta':        'fas fa-receipt',
+        'ventas.Pedido':              'fas fa-shopping-basket',
+        'configuracion.ConfiguracionERP': 'fas fa-sliders-h',
     },
-    'default_icon_parents': 'fas fa-folder',
-    'default_icon_children': 'fas fa-circle',
+    'default_icon_parents': 'fas fa-folder-open',
+    'default_icon_children': 'fas fa-dot-circle',
 
     # Apariencia
     'related_modal_active':     True,
-    'custom_css':               'erp_custom.css',   # archivo en static/
+    'custom_css':               'erp_custom.css',   # Personalización de estilos
     'show_sidebar':             True,
     'navigation_expanded':      True,
     'hide_apps':                [],
@@ -172,29 +172,29 @@ JAZZMIN_SETTINGS = {
 
 JAZZMIN_UI_TWEAKS = {
     'navbar_small_text':        False,
-    'footer_small_text':        False,
+    'footer_small_text':        True,
     'body_small_text':          False,
     'brand_small_text':         False,
-    'brand_colour':             'navbar-dark',
-    'accent':                   'accent-navy',
-    'navbar':                   'navbar-dark',
-    'no_navbar_border':         False,
+    'brand_colour':             'navbar-navy',
+    'accent':                   'accent-warning',    # Acentos en dorado/amarillo brillante
+    'navbar':                   'navbar-dark navbar-navy',
+    'no_navbar_border':         True,
     'navbar_fixed':             True,
     'layout_boxed':             False,
     'footer_fixed':             False,
     'sidebar_fixed':            True,
-    'sidebar':                  'sidebar-dark-navy',
+    'sidebar':                  'sidebar-dark-warning', # Destaca opciones seleccionadas
     'sidebar_nav_small_text':   False,
     'sidebar_disable_expand':   False,
     'sidebar_nav_child_indent': True,
     'sidebar_nav_compact_style': False,
     'sidebar_nav_legacy_style': False,
     'sidebar_nav_flat_style':   False,
-    'theme':                    'default',
-    'dark_mode_theme':          None,
+    'theme':                    'darkly',           # Tema moderno de alto contraste
+    'default_theme_mode':       'dark',
     'button_classes': {
-        'primary':   'btn-primary',
-        'secondary': 'btn-secondary',
+        'primary':   'btn-outline-primary',
+        'secondary': 'btn-outline-secondary',
         'info':      'btn-info',
         'warning':   'btn-warning',
         'danger':    'btn-danger',
