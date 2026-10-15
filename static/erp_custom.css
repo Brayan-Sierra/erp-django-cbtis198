@@ -77,3 +77,71 @@
     border-radius: 6px !important;
     font-weight: 600 !important;
 }
+
+/* ── Estilos Blanco y Negro (Black & White Theme) ── */
+
+/* Sidebar en color negro puro */
+.main-sidebar, .sidebar {
+    background-color: #000000 !important;
+}
+
+.brand-link {
+    background-color: #000000 !important;
+    border-bottom: 1px solid #333333 !important;
+}
+
+/* Reemplazar la "A" del círculo del usuario por la Clave de Fa en negro */
+.user-panel .image,
+.nav-link .user-image,
+.brand-image,
+.avatar-circle,
+.img-circle {
+    display: none !important;
+}
+
+/* Insertar Clave de Fa en lugar del avatar circular */
+.user-panel::before,
+.usermenu-avatar::before {
+    content: "𝄢" !important;
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    border-radius: 50% !important;
+    width: 35px !important;
+    height: 35px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 8px !important;
+    border: 1px solid #000000 !important;
+}
+
+/* Colores individuales para cada letra de "ERP Django" */
+.logo-e { color: #FF4136 !important; font-weight: bold; } /* Rojo */
+.logo-r { color: #FF851B !important; font-weight: bold; } /* Naranja */
+.logo-p { color: #FFDC00 !important; font-weight: bold; } /* Amarillo */
+.logo-d { color: #2ECC40 !important; font-weight: bold; } /* Verde */
+.logo-j { color: #0074D9 !important; font-weight: bold; } /* Azul */
+.logo-a { color: #7FDBFF !important; font-weight: bold; } /* Celeste */
+.logo-n { color: #B10DC9 !important; font-weight: bold; } /* Púrpura */
+.logo-g { color: #F012BE !important; font-weight: bold; } /* Rosa */
+.logo-o { color: #01FF70 !important; font-weight: bold; } /* Verde Lima */
+
+/* Fondo general de la aplicación en blanco */
+.content-wrapper, .main-footer {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+}
+
+/* Enlaces del sidebar */
+.nav-sidebar .nav-link {
+    color: #dddddd !important;
+}
+
+.nav-sidebar .nav-link:hover,
+.nav-sidebar .nav-link.active {
+    background-color: #222222 !important;
+    color: #ffffff !important;
+    border-left: 3px solid #ffffff !important;
+}
