@@ -28,27 +28,52 @@
 /* ── JAZZMIN: Override de colores con Fable 5 AzulERP ─────────────────── */
 
 /* Sidebar color navy */
-.main-sidebar, .sidebar { background-color: #0A2342 !important; }
+.main-sidebar, .sidebar { background-color: #0073ffd0 !important; }
 
 /* Navbar color navy */
-.main-header.navbar { background-color: #0A2342 !important; }
+.main-header.navbar { background-color: #a09108 !important; }
 
 /* Brand / logo area */
 .brand-link { border-bottom: 1px solid #B8860B !important; }
 .brand-text  { color: #D4AF37 !important; font-weight: 700 !important; }
 
 /* Sidebar links */
-.nav-sidebar .nav-link { color: rgba(255,255,255,.82) !important; }
+.nav-sidebar .nav-link { color: rgba(179, 255, 0, 0.82) !important; }
 .nav-sidebar .nav-link:hover,
 .nav-sidebar .nav-link.active {
-    background-color: #1B4F8A !important;
-    color: #FFFFFF !important;
+    background-color: #0077ff !important;
+    color: #00ff37 !important;
 }
 
 /* Accent: botones y badges en dorado */
 .accent-navy .nav-sidebar .nav-link.active {
-    background-color: #B8860B !important;
+    background-color: #ffb700 !important;
 }
 
 /* Footer */
-.main-footer { border-top: 2px solid #B8860B; }
+.main-footer { border-top: 2px solid #00ffffcb; }
+
+/* ── Estilo especial para el branding de la Clave de Fa ── */
+.brand-link {
+    border-bottom: 2px solid #f39c12 !important;
+    font-size: 1.25rem !important;
+}
+
+.brand-text {
+    color: #f39c12 !important;
+    font-weight: bold !important;
+    letter-spacing: 1px;
+}
+
+/* Efecto Hover en las opciones del Menú Lateral */
+.nav-sidebar .nav-item .nav-link:hover {
+    background-color: rgba(243, 156, 18, 0.2) !important;
+    border-left: 4px solid #f39c12;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Transición suave para los botones */
+.btn {
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+}
