@@ -183,13 +183,13 @@ JAZZMIN_SETTINGS = {
 
     'search_model':     ['clientes.Cliente', 'productos.Producto'],
 
-    # Menú superior con función de Dark Mode
+    # Menú superior
     'topmenu_links': [
         {'name': 'Inicio ERP',   'url': '/', 'new_window': False},
         {'name': 'Productos',    'url': '/productos/'},
         {'name': 'Clientes',     'url': '/clientes/'},
         {'name': 'Ventas',       'url': '/ventas/'},
-        {'name': 'π Modo Oscuro', 'url': 'javascript:toggleDarkMode()', 'new_window': False, 'permissions': []},
+        {'name': 'π Modo Oscuro', 'url': '#dark-mode-toggle', 'new_window': False, 'permissions': []},
     ],
 
     'usermenu_links': [
@@ -219,6 +219,7 @@ JAZZMIN_SETTINGS = {
 
     'related_modal_active':     True,
     'custom_css':               'erp_custom.css',
+    'custom_js':                'erp_custom.js',  # ← Registramos nuestro script personalizado
     'show_sidebar':             True,
     'navigation_expanded':      True,
     'hide_apps':                [],

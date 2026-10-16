@@ -74,25 +74,21 @@
 }
 
 /* ── 3. BOTÓN DE MODO OSCURO CON EL SÍMBOLO PI (π) ─────────────────── */
-.nav-link[data-widget="dark-mode"] {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 1.3rem !important;
+.navbar-nav .nav-link[href*="dark-mode-toggle"] {
     font-weight: bold !important;
-    color: #111111 !important;
+    font-size: 1rem !important;
+    color: #8b0000 !important;
+    background-color: #f4f6f9 !important;
+    border-radius: 20px !important;
+    padding: 4px 14px !important;
+    margin-left: 10px !important;
+    border: 1px solid #8b0000 !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
-/* Reemplazar el icono de luna/sol por defecto en el botón por el símbolo Pi */
-.nav-link[data-widget="dark-mode"] i {
-    display: none !important;
-}
-
-.nav-link[data-widget="dark-mode"]::after {
-    content: "π" !important;
-    font-size: 1.4rem !important;
-    font-weight: bold !important;
-    line-height: 1 !important;
+.navbar-nav .nav-link[href*="dark-mode-toggle"]:hover {
+    background-color: #8b0000 !important;
+    color: #ffffff !important;
 }
 
 /* ── 4. REEMPLAZO DE AVATAR Y LOGO DE LOGIN POR CLAVE DE FA (𝄢) ─────── */
@@ -190,40 +186,5 @@
 
 .btn-secondary:hover, .btn-outline-dark:hover, .btn-warning:hover {
     background-color: #000000 !important;
-    color: #ffffff !important;
-}
-
-/* Estilo del botón con el símbolo Pi (π) para el menú superior */
-.navbar-nav .nav-link[href="#"] {
-    font-weight: bold !important;
-    font-size: 1.1rem !important;
-    color: #8b0000 !important;
-    background-color: #f4f6f9 !important;
-    border-radius: 20px !important;
-    padding: 4px 12px !important;
-    margin-left: 10px !important;
-    border: 1px solid #8b0000 !important;
-}
-
-.navbar-nav .nav-link[href="#"]:hover {
-    background-color: #8b0000 !important;
-    color: #ffffff !important;
-}
-
-/* Estilo del botón π Modo Oscuro */
-.navbar-nav .nav-link[href*="toggleDarkMode"] {
-    font-weight: bold !important;
-    font-size: 1rem !important;
-    color: #8b0000 !important;
-    background-color: #f4f6f9 !important;
-    border-radius: 20px !important;
-    padding: 4px 14px !important;
-    margin-left: 10px !important;
-    border: 1px solid #8b0000 !important;
-    transition: all 0.2s ease-in-out !important;
-}
-
-.navbar-nav .nav-link[href*="toggleDarkMode"]:hover {
-    background-color: #8b0000 !important;
     color: #ffffff !important;
 }
