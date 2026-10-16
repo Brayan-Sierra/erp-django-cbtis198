@@ -183,13 +183,13 @@ JAZZMIN_SETTINGS = {
 
     'search_model':     ['clientes.Cliente', 'productos.Producto'],
 
-    # Menú superior con botón de cambio de tema Pi (π)
+    # Menú superior con función de Dark Mode
     'topmenu_links': [
         {'name': 'Inicio ERP',   'url': '/', 'new_window': False},
         {'name': 'Productos',    'url': '/productos/'},
         {'name': 'Clientes',     'url': '/clientes/'},
         {'name': 'Ventas',       'url': '/ventas/'},
-        {'name': 'π Modo Oscuro', 'url': '#', 'new_window': False, 'permissions': []},
+        {'name': 'π Modo Oscuro', 'url': 'javascript:toggleDarkMode()', 'new_window': False, 'permissions': []},
     ],
 
     'usermenu_links': [
