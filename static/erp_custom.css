@@ -1,23 +1,22 @@
 /* static/erp_custom.css
-   Utilidades adicionales de Fable 5 AzulERP.
-   Las variables CSS principales están definidas en base.html.
+   Utilidades ERP CBTis198 + Branding con Clave de Fa (𝄢) y Botón Modo Oscuro Pi (π)
 */
 
-/* Tarjetas clicables en la bienvenida */
+/* ── 1. UTILIDADES Y CARDS DE BIENVENIDA ────────────────────────────── */
 .erp-module-card {
     transition: transform .2s, box-shadow .2s;
     cursor: pointer;
 }
 .erp-module-card:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 /* Utilidades de color */
-.text-gold   { color: var(--clr-gold)  !important; }
-.text-navy   { color: var(--clr-navy)  !important; }
-.bg-navy     { background: var(--clr-navy) !important; }
-.border-gold { border-color: var(--clr-gold) !important; }
+.text-gold   { color: #D4AF37 !important; }
+.text-navy   { color: #0073ff !important; }
+.bg-navy     { background: #0073ff !important; }
+.border-gold { border-color: #D4AF37 !important; }
 
 /* Código monoespaciado */
 .font-mono {
@@ -25,69 +24,29 @@
     font-size: .9em;
 }
 
-/* ── JAZZMIN: Override de colores con Fable 5 AzulERP ─────────────────── */
-
-/* Sidebar color navy */
-.main-sidebar, .sidebar { background-color: #0073ffd0 !important; }
-
-/* Navbar color navy */
-.main-header.navbar { background-color: #a09108 !important; }
-
-/* Brand / logo area */
-.brand-link { border-bottom: 1px solid #B8860B !important; }
-.brand-text  { color: #D4AF37 !important; font-weight: 700 !important; }
-
-/* Sidebar links */
-.nav-sidebar .nav-link { color: rgba(179, 255, 0, 0.82) !important; }
-.nav-sidebar .nav-link:hover,
-.nav-sidebar .nav-link.active {
-    background-color: #0077ff !important;
-    color: #00ff37 !important;
-}
-
-/* Accent: botones y badges en dorado */
-.accent-navy .nav-sidebar .nav-link.active {
-    background-color: #ffb700 !important;
-}
-
-/* Footer */
-.main-footer { border-top: 2px solid #00ffffcb; }
-
-/* ── Estilo especial para el branding de la Clave de Fa ── */
-.brand-link {
-    border-bottom: 2px solid #f39c12 !important;
-    font-size: 1.25rem !important;
-}
-
-.brand-text {
-    color: #f39c12 !important;
-    font-weight: bold !important;
-    letter-spacing: 1px;
-}
-
-/* Efecto Hover en las opciones del Menú Lateral */
-.nav-sidebar .nav-item .nav-link:hover {
-    background-color: rgba(243, 156, 18, 0.2) !important;
-    border-left: 4px solid #f39c12;
-    transition: all 0.2s ease-in-out;
-}
-
-/* Transición suave para los botones */
+/* Transición suave para botones */
 .btn {
     border-radius: 6px !important;
     font-weight: 600 !important;
 }
 
-/* ── Estilos Blanco y Negro (Black & White Theme) ── */
+/* ── 2. ESTRUCTURA PRINCIPAL Y SIDEBAR ROJO ────────────────────────── */
 
-/* Sidebar en color negro puro */
+/* Fondo general de la aplicación */
+.content-wrapper, .main-footer {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+}
+
+/* Sidebar en color Rojo Carmesí */
 .main-sidebar, .sidebar {
-    background-color: #000000 !important;
+    background-color: #8b0000 !important;
 }
 
 .brand-link {
-    background-color: #000000 !important;
-    border-bottom: 1px solid #333333 !important;
+    background-color: #660000 !important;
+    border-bottom: 2px solid #a00000 !important;
+    font-size: 1.25rem !important;
 }
 
 .brand-text {
@@ -96,7 +55,47 @@
     letter-spacing: 1px;
 }
 
-/* ── REEMPLAZO DE AVATAR Y LOGO DE LOGIN POR CLAVE DE FA (𝄢) ── */
+/* Opciones del menú lateral */
+.nav-sidebar .nav-link {
+    color: #ffffff !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-sidebar .nav-link:hover {
+    background-color: #a00000 !important;
+    color: #ffffff !important;
+    border-left: 4px solid #ffffff;
+}
+
+.nav-sidebar .nav-link.active {
+    background-color: #ffffff !important;
+    color: #8b0000 !important;
+    font-weight: bold !important;
+}
+
+/* ── 3. BOTÓN DE MODO OSCURO CON EL SÍMBOLO PI (π) ─────────────────── */
+.nav-link[data-widget="dark-mode"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.3rem !important;
+    font-weight: bold !important;
+    color: #111111 !important;
+}
+
+/* Reemplazar el icono de luna/sol por defecto en el botón por el símbolo Pi */
+.nav-link[data-widget="dark-mode"] i {
+    display: none !important;
+}
+
+.nav-link[data-widget="dark-mode"]::after {
+    content: "π" !important;
+    font-size: 1.4rem !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+}
+
+/* ── 4. REEMPLAZO DE AVATAR Y LOGO DE LOGIN POR CLAVE DE FA (𝄢) ─────── */
 
 /* Ocultar iconos de usuario/avatar por defecto en Admin y Login */
 .user-panel .image,
@@ -147,34 +146,49 @@
     content: "𝄢 " !important;
     font-size: 2.2rem !important;
     font-weight: bold !important;
-    color: #000000 !important;
+    color: #8b0000 !important;
 }
 
-/* Fondo de pantalla de Login e interfaz general */
+/* ── 5. PANTALLA DE LOGIN E INTERFAZ ──────────────────────────────── */
 .login-page, .register-page {
-    background-color: #f4f6f9 !important;
+    background-color: #f8f9fa !important;
 }
 
 .login-box .card {
-    border-radius: 10px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
-    border: 1px solid #111111 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+    border: 2px solid #8b0000 !important;
 }
 
-/* Fondo general de la aplicación */
-.content-wrapper, .main-footer {
-    background-color: #ffffff !important;
-    color: #111111 !important;
+.login-box .btn-primary {
+    background-color: #8b0000 !important;
+    border-color: #8b0000 !important;
 }
 
-/* Enlaces del sidebar */
-.nav-sidebar .nav-link {
-    color: #dddddd !important;
+.login-box .btn-primary:hover {
+    background-color: #660000 !important;
 }
 
-.nav-sidebar .nav-link:hover,
-.nav-sidebar .nav-link.active {
-    background-color: #222222 !important;
+/* ── 6. BOTONES BLANCO Y NEGRO EN EL ADMIN ────────────────────────── */
+.btn-primary, .btn-success, .btn-danger, .btn-info {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
     color: #ffffff !important;
-    border-left: 3px solid #ffffff !important;
+}
+
+.btn-primary:hover, .btn-success:hover, .btn-danger:hover, .btn-info:hover {
+    background-color: #333333 !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary, .btn-outline-dark, .btn-warning {
+    background-color: #ffffff !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+}
+
+.btn-secondary:hover, .btn-outline-dark:hover, .btn-warning:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
 }

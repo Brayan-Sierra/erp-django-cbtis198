@@ -176,14 +176,14 @@ JAZZMIN_UI_TWEAKS = {
     'body_small_text':          False,
     'brand_small_text':         False,
     'brand_colour':             'navbar-dark',
-    'accent':                   'accent-dark',
+    'accent':                   'accent-danger',       # Acentos generales en rojo
     'navbar':                   'navbar-white navbar-light',
     'no_navbar_border':         False,
     'navbar_fixed':             True,
     'layout_boxed':             False,
     'footer_fixed':             False,
     'sidebar_fixed':            True,
-    'sidebar':                  'sidebar-dark-primary',
+    'sidebar':                  'sidebar-dark-danger',  # Sidebar oscuro con base roja
     'sidebar_nav_small_text':   False,
     'sidebar_disable_expand':   False,
     'sidebar_nav_child_indent': True,
@@ -191,12 +191,13 @@ JAZZMIN_UI_TWEAKS = {
     'sidebar_nav_legacy_style': False,
     'sidebar_nav_flat_style':   False,
     'theme':                    'default',
+    'dark_mode_theme':          'darkly',              # ← Habilita el interruptor/botón de modo oscuro
     'button_classes': {
         'primary':   'btn-dark',
         'secondary': 'btn-outline-dark',
-        'info':      'btn-info',
-        'warning':   'btn-warning',
-        'danger':    'btn-danger',
-        'success':   'btn-success',
+        'info':      'btn-light',
+        'warning':   'btn-outline-dark',
+        'danger':    'btn-dark',
+        'success':   'btn-dark',
     },
 }
