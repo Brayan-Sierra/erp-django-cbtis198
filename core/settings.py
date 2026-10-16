@@ -170,20 +170,78 @@ JAZZMIN_SETTINGS = {
     'language_chooser':         False,
 }
 
+JAZZMIN_SETTINGS = {
+    # Identidad
+    'site_title':       'ERP Django',
+    'site_header':      'ERP CBTis198',
+    'site_brand':       '𝄢 ERP Django',
+    'welcome_sign':     '𝄢 Bienvenido al Sistema ERP · CBTis198 Celaya',
+    'copyright':        'Brayan Enrique Sierra Rivera · CBTis198 Celaya',
+
+    'site_icon':        None,
+    'site_logo':        None,
+
+    'search_model':     ['clientes.Cliente', 'productos.Producto'],
+
+    # Menú superior con botón de cambio de tema Pi (π)
+    'topmenu_links': [
+        {'name': 'Inicio ERP',   'url': '/', 'new_window': False},
+        {'name': 'Productos',    'url': '/productos/'},
+        {'name': 'Clientes',     'url': '/clientes/'},
+        {'name': 'Ventas',       'url': '/ventas/'},
+        {'name': 'π Modo Oscuro', 'url': '#', 'new_window': False, 'permissions': []},
+    ],
+
+    'usermenu_links': [
+        {'name': 'Ver ERP', 'url': '/', 'new_window': False},
+    ],
+
+    'order_with_respect_to': [
+        'clientes', 'proveedores', 'productos',
+        'ventas', 'configuracion', 'auth',
+    ],
+
+    'icons': {
+        'auth':                       'fas fa-users-cog',
+        'auth.user':                  'fas fa-user',
+        'auth.Group':                 'fas fa-users',
+        'clientes.Cliente':           'fas fa-user-tie',
+        'proveedores.Proveedor':      'fas fa-truck',
+        'productos.Categoria':        'fas fa-tags',
+        'productos.Producto':         'fas fa-box',
+        'ventas.Venta':               'fas fa-file-invoice-dollar',
+        'ventas.DetalleVenta':        'fas fa-list',
+        'ventas.Pedido':              'fas fa-shopping-cart',
+        'configuracion.ConfiguracionERP': 'fas fa-cogs',
+    },
+    'default_icon_parents': 'fas fa-folder',
+    'default_icon_children': 'fas fa-circle',
+
+    'related_modal_active':     True,
+    'custom_css':               'erp_custom.css',
+    'show_sidebar':             True,
+    'navigation_expanded':      True,
+    'hide_apps':                [],
+    'hide_models':              [],
+
+    'changeform_format':        'horizontal_tabs',
+    'language_chooser':         False,
+}
+
 JAZZMIN_UI_TWEAKS = {
     'navbar_small_text':        False,
     'footer_small_text':        False,
     'body_small_text':          False,
     'brand_small_text':         False,
     'brand_colour':             'navbar-dark',
-    'accent':                   'accent-danger',       # Acentos generales en rojo
+    'accent':                   'accent-danger',
     'navbar':                   'navbar-white navbar-light',
     'no_navbar_border':         False,
     'navbar_fixed':             True,
     'layout_boxed':             False,
     'footer_fixed':             False,
     'sidebar_fixed':            True,
-    'sidebar':                  'sidebar-dark-danger',  # Sidebar oscuro con base roja
+    'sidebar':                  'sidebar-dark-danger',
     'sidebar_nav_small_text':   False,
     'sidebar_disable_expand':   False,
     'sidebar_nav_child_indent': True,
@@ -191,7 +249,8 @@ JAZZMIN_UI_TWEAKS = {
     'sidebar_nav_legacy_style': False,
     'sidebar_nav_flat_style':   False,
     'theme':                    'default',
-    'dark_mode_theme':          'darkly',              # ← Habilita el interruptor/botón de modo oscuro
+    'dark_mode_theme':          'darkly',
+    'show_ui_builder':          True,  # ← Habilita el selector de temas visual de Jazzmin en la barra superior
     'button_classes': {
         'primary':   'btn-dark',
         'secondary': 'btn-outline-dark',

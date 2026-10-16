@@ -192,3 +192,20 @@
     background-color: #000000 !important;
     color: #ffffff !important;
 }
+
+/* Estilo del botón con el símbolo Pi (π) para el menú superior */
+.navbar-nav .nav-link[href="#"] {
+    font-weight: bold !important;
+    font-size: 1.1rem !important;
+    color: #8b0000 !important;
+    background-color: #f4f6f9 !important;
+    border-radius: 20px !important;
+    padding: 4px 12px !important;
+    margin-left: 10px !important;
+    border: 1px solid #8b0000 !important;
+}
+
+.navbar-nav .nav-link[href="#"]:hover {
+    background-color: #8b0000 !important;
+    color: #ffffff !important;
+}
