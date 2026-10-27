@@ -14,7 +14,7 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Sistema de Diseño Monocromático (B&N) -->
+    <!-- Sistema de Diseño Monocromático / c00lgui -->
     <style>
     /* TOKENS MODO CLARO */
     :root, [data-theme="light"] {
@@ -39,24 +39,24 @@
         --bg-image   : url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiRauhvi0QMzaq18-shkloKlXOpOFE1KbIJFVpQNFmAA&s=10');
     }
 
-    /* TOKENS MODO OSCURO */
+    /* TOKENS MODO OSCURO (Estilo c00lgui) */
     [data-theme="dark"] {
-        --clr-navy   : #121212;
-        --clr-royal  : #1e1e1e;
-        --clr-sky    : #aaaaaa;
-        --clr-ice    : #242424;
+        --clr-navy   : #0a0a0a;
+        --clr-royal  : #1a0000;
+        --clr-sky    : #ff6666;
+        --clr-ice    : #181818;
         --clr-gold   : #ffffff;
         --clr-amber  : #cccccc;
         --clr-cream  : #1a1a1a;
-        --clr-surface: #181818;
+        --clr-surface: #0d0d0d;
         --clr-text   : #ffffff;
         --clr-muted  : #aaaaaa;
-        --clr-border : #333333;
-        --clr-overlay: rgba(10, 10, 10, 0.75);
+        --clr-border : #ff0000;
+        --clr-overlay: rgba(0, 0, 0, 0.55);
         --clr-danger : #ffffff;
         --clr-ok     : #cccccc;
-        --shadow-sm  : 0 2px 8px rgba(0,0,0,.5);
-        --shadow-md  : 0 4px 16px rgba(0,0,0,.7);
+        --shadow-sm  : 0 0 10px rgba(255, 0, 0, 0.3);
+        --shadow-md  : 0 0 16px rgba(255, 0, 0, 0.5);
         
         /* Imagen de fondo para MODO OSCURO */
         --bg-image   : url('https://static.wikia.nocookie.net/forsaken2024/images/1/12/Noob.png');
@@ -93,7 +93,7 @@
         min-height: calc(100vh - 110px); 
     }
 
-    /* CARDS */
+    /* CARDS Y CONTENEDORES */
     .erp-card {
         background: var(--clr-surface);
         border: 1px solid var(--clr-border);
@@ -106,11 +106,11 @@
     }
     .erp-card:hover { box-shadow: var(--shadow-md); }
 
-    /* BOTONES MONOCROMÁTICOS RESTAURADOS */
+    /* BOTONES MONOCROMÁTICOS / C00LGUI CORREGIDOS */
     .btn-erp-primary {
-        background: var(--clr-text);
-        color: var(--clr-surface) !important;
-        border: 1px solid var(--clr-text);
+        background: #000000 !important;
+        color: #ffffff !important;
+        border: 1px solid #000000 !important;
         border-radius: 8px;
         padding: .45rem 1.2rem;
         font-weight: 600;
@@ -118,35 +118,37 @@
         cursor: pointer;
         text-decoration: none;
         display: inline-block;
-        transition: opacity .2s, background .2s, color .2s;
+        transition: opacity .2s, background .2s;
     }
     .btn-erp-primary:hover {
         opacity: 0.85;
-        color: var(--clr-surface) !important;
+        color: #ffffff !important;
     }
 
+    /* Botón Editar / Secundario */
     .btn-erp-gold, .btn-erp-secondary {
-        background: var(--clr-surface);
-        color: var(--clr-text) !important;
-        border: 1px solid var(--clr-border);
+        background: #ffffff !important;
+        color: #000000 !important;
+        border: 1.5px solid #000000 !important;
         border-radius: 8px;
         padding: .45rem 1.2rem;
-        font-weight: 600;
+        font-weight: 700;
         font-size: .88rem;
         cursor: pointer;
         text-decoration: none;
         display: inline-block;
-        transition: background .2s;
+        transition: background .2s, color .2s;
     }
     .btn-erp-gold:hover, .btn-erp-secondary:hover {
-        background: var(--clr-ice);
-        color: var(--clr-text) !important;
+        background: #000000 !important;
+        color: #ffffff !important;
     }
 
+    /* Botón Eliminar / Danger en Carmesí */
     .btn-erp-danger {
-        background: #c0392b;
+        background: #8b0000 !important;
         color: #ffffff !important;
-        border: 1px solid #c0392b;
+        border: 1px solid #8b0000 !important;
         border-radius: 8px;
         padding: .4rem 1rem;
         font-weight: 600;
@@ -158,6 +160,7 @@
     }
     .btn-erp-danger:hover {
         opacity: 0.85;
+        color: #ffffff !important;
     }
 
     .btn-erp-sm { 
@@ -165,17 +168,17 @@
         font-size: .8rem; 
     }
 
-    /* TABLAS Y LISTAS */
+    /* TABLAS Y CORRECCIÓN DE LEGIBILIDAD EN CELDAS */
     .erp-table {
         width: 100%;
         border-collapse: collapse;
-        background: var(--clr-surface);
+        background: var(--clr-surface) !important;
         border-radius: 8px;
         overflow: hidden;
     }
     .erp-table thead th {
-        background: var(--clr-navy);
-        color: #ffffff;
+        background: var(--clr-navy) !important;
+        color: #ffffff !important;
         padding: .75rem 1rem;
         font-size: .85rem;
         text-transform: uppercase;
@@ -184,10 +187,47 @@
     .erp-table tbody td {
         padding: .75rem 1rem;
         border-bottom: 1px solid var(--clr-border);
-        color: var(--clr-text);
+        color: var(--clr-text) !important;
+    }
+    .erp-table tbody td strong {
+        color: var(--clr-text) !important;
+        font-weight: 600;
     }
     .erp-table tbody tr:nth-child(even) td {
-        background: var(--clr-ice);
+        background: var(--clr-ice) !important;
+    }
+
+    /* FIX DEFINITIVO PARA ENLACES Y BOTONES DE ACCIÓN EN TABLAS */
+    .erp-table td a,
+    .erp-table td a:link,
+    .erp-table td a:visited,
+    .erp-table td .btn {
+        color: #ffffff !important;
+        background-color: #2b2b2b !important;
+        border: 1px solid #000000 !important;
+        padding: .3rem .75rem !important;
+        border-radius: 6px !important;
+        font-size: .8rem !important;
+        font-weight: 700 !important;
+        text-decoration: none !important;
+        display: inline-block !important;
+        opacity: 1 !important;
+    }
+
+    /* Botón de Eliminar o Peligro */
+    .erp-table td a[href*="eliminar"],
+    .erp-table td a[href*="delete"],
+    .erp-table td .btn-danger,
+    .erp-table td .btn-erp-danger {
+        background-color: #8b0000 !important;
+        border-color: #8b0000 !important;
+        color: #ffffff !important;
+    }
+
+    .erp-table td a:hover,
+    .erp-table td .btn:hover {
+        background-color: #000000 !important;
+        color: #ffffff !important;
     }
 
     /* FORMULARIOS */

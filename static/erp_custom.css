@@ -1,190 +1,160 @@
 /* static/erp_custom.css
-   Utilidades ERP CBTis198 + Branding con Clave de Fa (𝄢) y Botón Modo Oscuro Pi (π)
+   Estilo c00lgui (Roblox Retro Neón) + ERP Django Admin
 */
 
-/* ── 1. UTILIDADES Y CARDS DE BIENVENIDA ────────────────────────────── */
-.erp-module-card {
-    transition: transform .2s, box-shadow .2s;
-    cursor: pointer;
-}
-.erp-module-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-/* Utilidades de color */
-.text-gold   { color: #D4AF37 !important; }
-.text-navy   { color: #0073ff !important; }
-.bg-navy     { background: #0073ff !important; }
-.border-gold { border-color: #D4AF37 !important; }
-
-/* Código monoespaciado */
-.font-mono {
-    font-family: 'JetBrains Mono', Consolas, monospace !important;
-    font-size: .9em;
+/* ── 1. BASE Y FONDO C00LGUI ────────────────────────────────────────── */
+body, 
+.wrapper, 
+.content-wrapper, 
+.main-footer {
+    background-color: #050505 !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), 
+                      url('https://th.bing.com/th/id/OIP.Ia8UY_RsKHw7mp8D5MTxHwHaEu?w=282&h=180&c=7&r=0&o=7&pid=1.7&rm=3') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    color: #ffffff !important;
 }
 
-/* Transición suave para botones */
-.btn {
-    border-radius: 6px !important;
-    font-weight: 600 !important;
+.content-wrapper, 
+.content {
+    background-color: transparent !important;
 }
 
-/* ── 2. ESTRUCTURA PRINCIPAL Y SIDEBAR ROJO ────────────────────────── */
-
-/* Fondo general de la aplicación */
-.content-wrapper, .main-footer {
-    background-color: #ffffff !important;
-    color: #111111 !important;
+/* ── 2. TÍTULOS Y TEXTOS EN MODO C00LGUI ────────────────────────────── */
+/* Corregir el título "Panel de control" y subtítulos para que destaquen en rojo/blanco */
+h1, h2, h3, h4, .content-header h1, .brand-text {
+    color: #ff3333 !important;
+    text-shadow: 0 0 8px rgba(255, 0, 0, 0.8), 0 0 15px rgba(255, 0, 0, 0.4);
+    font-weight: 800 !important;
 }
 
-/* Sidebar en color Rojo Carmesí */
+.breadcrumb-item a, .breadcrumb-item.active {
+    color: #ffffff !important;
+}
+
+/* ── 3. TARJETAS Y CONTENEDORES ESTILO C00LGUI ──────────────────────── */
+.content-wrapper .card,
+.content-wrapper .small-box,
+.content-wrapper .table-responsive,
+.app-module-card {
+    background-color: rgba(15, 15, 15, 0.90) !important;
+    border: 2px solid #ff0000 !important;
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.35) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+}
+
+.card-header, .card-footer {
+    background-color: rgba(30, 0, 0, 0.8) !important;
+    border-bottom: 1px solid #ff0000 !important;
+    color: #ffffff !important;
+}
+
+/* ── 4. BARRA DE NAVEGACIÓN Y MENU LATERAL ──────────────────────────── */
+.main-header.navbar {
+    background-color: #0a0a0a !important;
+    border-bottom: 2px solid #ff0000 !important;
+}
+
+.main-header .nav-link {
+    color: #ffffff !important;
+}
+
 .main-sidebar, .sidebar {
-    background-color: #8b0000 !important;
+    background-color: #080808 !important;
+    border-right: 2px solid #ff0000 !important;
 }
 
 .brand-link {
-    background-color: #660000 !important;
-    border-bottom: 2px solid #a00000 !important;
-    font-size: 1.25rem !important;
+    background-color: #1a0000 !important;
+    border-bottom: 2px solid #ff0000 !important;
 }
 
-.brand-text {
-    color: #ffffff !important;
-    font-weight: 700 !important;
-    letter-spacing: 1px;
-}
-
-/* Opciones del menú lateral */
 .nav-sidebar .nav-link {
-    color: #ffffff !important;
-    transition: all 0.2s ease-in-out;
+    color: #e0e0e0 !important;
 }
 
 .nav-sidebar .nav-link:hover {
-    background-color: #a00000 !important;
+    background-color: #ff0000 !important;
     color: #ffffff !important;
-    border-left: 4px solid #ffffff;
+    box-shadow: 0 0 10px #ff0000;
 }
 
 .nav-sidebar .nav-link.active {
-    background-color: #ffffff !important;
-    color: #8b0000 !important;
+    background-color: #ff0000 !important;
+    color: #ffffff !important;
     font-weight: bold !important;
 }
 
-/* ── 3. BOTÓN DE MODO OSCURO CON EL SÍMBOLO PI (π) ─────────────────── */
-.navbar-nav .nav-link[href*="dark-mode-toggle"] {
-    font-weight: bold !important;
-    font-size: 1rem !important;
-    color: #8b0000 !important;
-    background-color: #f4f6f9 !important;
-    border-radius: 20px !important;
-    padding: 4px 14px !important;
-    margin-left: 10px !important;
-    border: 1px solid #8b0000 !important;
-    transition: all 0.2s ease-in-out !important;
+/* ── 5. TABLAS, ENLACES Y ACCIONES RECIENTES ──────────────────────── */
+.content-wrapper a {
+    color: #ff6666 !important;
+    font-weight: 600;
 }
 
-.navbar-nav .nav-link[href*="dark-mode-toggle"]:hover {
-    background-color: #8b0000 !important;
+.content-wrapper a:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 5px #ff0000;
+}
+
+/* Panel lateral derecho (Acciones recientes) */
+.timeline-item, .action-list {
+    background-color: rgba(20, 0, 0, 0.85) !important;
+    color: #ffffff !important;
+    border: 1px solid #ff3333 !important;
+}
+
+/* ── 6. BOTONES C00LGUI (ROJO / NEGRO NEÓN) ─────────────────────────── */
+.btn-primary, .btn-success, .btn-danger, .btn-info, .btn-dark {
+    background-color: #990000 !important;
+    border: 1px solid #ff3333 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
+    font-weight: bold !important;
+}
+
+.btn-primary:hover, .btn-success:hover, .btn-danger:hover {
+    background-color: #ff0000 !important;
+    box-shadow: 0 0 12px #ff0000;
     color: #ffffff !important;
 }
 
-/* ── 4. REEMPLAZO DE AVATAR Y LOGO DE LOGIN POR CLAVE DE FA (𝄢) ─────── */
-
-/* Ocultar iconos de usuario/avatar por defecto en Admin y Login */
-.user-panel .image,
-.nav-link .user-image,
-.brand-image,
-.avatar-circle,
-.img-circle,
-.login-logo img,
-.login-box-msg i {
-    display: none !important;
+.btn-secondary, .btn-outline-dark, .btn-warning {
+    background-color: #111111 !important;
+    border: 1px solid #ff3333 !important;
+    color: #ffffff !important;
 }
 
-/* Clave de Fa en el sidebar de usuario */
+.btn-secondary:hover {
+    background-color: #333333 !important;
+    color: #ff3333 !important;
+}
+
+/* ── 7. REEMPLAZOS CLAVE DE FA Y PI ────────────────────────────────── */
 .user-panel::before {
     content: "𝄢" !important;
     font-size: 1.4rem !important;
-    font-weight: bold !important;
-    color: #000000 !important;
-    background-color: #ffffff !important;
+    color: #ff0000 !important;
+    background-color: #000000 !important;
     border-radius: 50% !important;
     width: 32px !important;
     height: 32px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin-right: 10px !important;
-    border: 1px solid #000000 !important;
+    border: 1px solid #ff0000 !important;
+    box-shadow: 0 0 8px #ff0000;
 }
 
-/* Clave de Fa en el icono de usuario de la barra superior derecha */
-.nav-item.dropdown.user-menu .nav-link::before {
-    content: "𝄢" !important;
-    font-size: 1.2rem !important;
+.navbar-nav .nav-link[href*="dark-mode-toggle"],
+.navbar-nav a[href*="dark-mode"] {
     font-weight: bold !important;
-    color: #000000 !important;
-    background-color: #f4f6f9 !important;
-    border-radius: 50% !important;
-    width: 28px !important;
-    height: 28px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid #cccccc !important;
-}
-
-/* Clave de Fa destacada en la pantalla de Inicio de Sesión (Login) */
-.login-logo a::before {
-    content: "𝄢 " !important;
-    font-size: 2.2rem !important;
-    font-weight: bold !important;
-    color: #8b0000 !important;
-}
-
-/* ── 5. PANTALLA DE LOGIN E INTERFAZ ──────────────────────────────── */
-.login-page, .register-page {
-    background-color: #f8f9fa !important;
-}
-
-.login-box .card {
-    border-radius: 8px !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
-    border: 2px solid #8b0000 !important;
-}
-
-.login-box .btn-primary {
-    background-color: #8b0000 !important;
-    border-color: #8b0000 !important;
-}
-
-.login-box .btn-primary:hover {
-    background-color: #660000 !important;
-}
-
-/* ── 6. BOTONES BLANCO Y NEGRO EN EL ADMIN ────────────────────────── */
-.btn-primary, .btn-success, .btn-danger, .btn-info {
-    background-color: #000000 !important;
-    border-color: #000000 !important;
     color: #ffffff !important;
-}
-
-.btn-primary:hover, .btn-success:hover, .btn-danger:hover, .btn-info:hover {
-    background-color: #333333 !important;
-    border-color: #333333 !important;
-    color: #ffffff !important;
-}
-
-.btn-secondary, .btn-outline-dark, .btn-warning {
-    background-color: #ffffff !important;
-    border-color: #000000 !important;
-    color: #000000 !important;
-}
-
-.btn-secondary:hover, .btn-outline-dark:hover, .btn-warning:hover {
-    background-color: #000000 !important;
-    color: #ffffff !important;
+    background-color: #990000 !important;
+    border-radius: 20px !important;
+    padding: 4px 14px !important;
+    border: 1px solid #ff3333 !important;
+    box-shadow: 0 0 8px #ff0000;
 }
