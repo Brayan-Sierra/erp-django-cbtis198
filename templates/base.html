@@ -16,245 +16,273 @@
 
     <!-- Sistema de Diseño Monocromático (B&N) -->
     <style>
-        /* TOKENS MODO CLARO (B&N) */
-        :root, [data-theme="light"] {
-            --clr-navy   : #000000;
-            --clr-royal  : #2b2b2b;
-            --clr-sky    : #4a4a4a;
-            --clr-ice    : #f2f2f2;
-            --clr-gold   : #ffffff;
-            --clr-amber  : #e0e0e0;
-            --clr-cream  : #f8f9fa;
-            --clr-bg     : #fdfdfd;
-            --clr-surface: #ffffff;
-            --clr-text   : #121212;
-            --clr-muted  : #555555;
-            --clr-border : #cccccc;
-            --clr-danger : #000000;
-            --clr-ok     : #333333;
-            --shadow-sm  : 0 1px 4px rgba(0,0,0,.1);
-            --shadow-md  : 0 4px 16px rgba(0,0,0,.15);
-        }
-
-        /* TOKENS MODO OSCURO (B&N Invertido) */
-        [data-theme="dark"] {
-            --clr-navy   : #121212;
-            --clr-royal  : #1e1e1e;
-            --clr-sky    : #aaaaaa;
-            --clr-ice    : #242424;
-            --clr-gold   : #ffffff;
-            --clr-amber  : #cccccc;
-            --clr-cream  : #1a1a1a;
-            --clr-bg     : #0a0a0a;
-            --clr-surface: #141414;
-            --clr-text   : #ffffff;
-            --clr-muted  : #aaaaaa;
-            --clr-border : #333333;
-            --clr-danger : #ffffff;
-            --clr-ok     : #cccccc;
-            --shadow-sm  : 0 1px 4px rgba(0,0,0,.5);
-            --shadow-md  : 0 4px 16px rgba(0,0,0,.7);
-        }
-
-        /* REGLAS PARA SÍMBOLO DINÁMICO (Fa en claro -> Pi en oscuro) */
-        .theme-symbol::before {
-            content: "𝄢";
-        }
-        [data-theme="dark"] .theme-symbol::before {
-            content: "π";
-        }
-
-        /* BASE */
-        *, *::before, *::after { box-sizing: border-box; }
-        body {
-            font-family: 'Inter','Segoe UI',sans-serif;
-            font-size: 15px;
-            background: var(--clr-bg);
-            color: var(--clr-text);
-            line-height: 1.6;
-            transition: background .25s, color .25s;
-            margin: 0;
-        }
-
-        /* NAVBAR */
-        .erp-navbar {
-            background: var(--clr-navy);
-            border-bottom: 2px solid var(--clr-border);
-            padding: .65rem 1.5rem;
-            display: flex; align-items: center;
-            justify-content: space-between; flex-wrap: wrap; gap: .5rem;
-            box-shadow: var(--shadow-md);
-        }
-        .erp-brand {
-            font-family: 'Playfair Display',Georgia,serif;
-            font-size: 1.3rem; font-weight: 700;
-            color: #ffffff !important;
-            text-decoration: none; letter-spacing: .04em;
-            display: flex; align-items: center; gap: .4rem;
-        }
-        .erp-brand span { color: rgba(255,255,255,.6); font-weight: 300; font-size: .85em; }
-        .erp-nav-links { display: flex; align-items: center; gap: .25rem; flex-wrap: wrap; }
-        .erp-nav-link {
-            color: rgba(255,255,255,.8) !important;
-            font-size: .88rem; font-weight: 500;
-            padding: .35rem .75rem; border-radius: 6px;
-            text-decoration: none;
-            transition: background .2s, color .2s;
-        }
-        .erp-nav-link:hover, .erp-nav-link.active {
-            background: var(--clr-royal); color: #FFF !important;
-        }
-        .theme-toggle {
-            background: #ffffff; color: #000000;
-            border: 1px solid #000000; border-radius: 50%;
-            width: 32px; height: 32px; font-size: .9rem;
-            cursor: pointer; transition: transform .2s, background .2s;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .theme-toggle:hover { transform: scale(1.1); }
-
-        /* CONTENIDO PRINCIPAL */
-        .erp-main { padding: 2rem 0; min-height: calc(100vh - 110px); }
-
-        /* CARDS ADAPTABLES */
-        .erp-card {
-            background: var(--clr-surface);
-            border: 1px solid var(--clr-border);
-            border-radius: 12px; box-shadow: var(--shadow-sm);
-            padding: 1.5rem; margin-bottom: 1.5rem;
-            color: var(--clr-text);
-            transition: background .25s, color .25s, box-shadow .2s;
-        }
-        .erp-card:hover { box-shadow: var(--shadow-md); }
-        .erp-card-header {
-            background: var(--clr-navy); color: #FFF;
-            border-radius: 10px 10px 0 0;
-            padding: .85rem 1.25rem;
-            border-left: 5px solid #ffffff;
-            font-family: 'Playfair Display',serif;
-            font-size: 1.05rem; letter-spacing: .03em;
-            margin: -1.5rem -1.5rem 1.5rem;
-        }
-
-        /* TABLAS */
-        .erp-table {
-            width: 100%; border-collapse: separate; border-spacing: 0;
-            border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-sm);
-        }
-        .erp-table thead th {
-            background: var(--clr-navy); color: #FFF;
-            font-weight: 600; font-size: .82rem;
-            text-transform: uppercase; letter-spacing: .06em;
-            padding: .75rem 1rem; border-bottom: 2px solid var(--clr-border);
-        }
-        .erp-table tbody td {
-            background: var(--clr-surface); padding: .65rem 1rem;
-            border-bottom: 1px solid var(--clr-border); font-size: .9rem;
-        }
-        .erp-table tbody tr:nth-child(even) td { background: var(--clr-ice); }
-        .erp-table tbody tr:hover td { background: rgba(0,0,0,.05); }
-        [data-theme="dark"] .erp-table tbody tr:hover td { background: rgba(255,255,255,.05); }
-        .erp-table tfoot td {
-            background: var(--clr-cream); color: var(--clr-text);
-            font-weight: 700; border-top: 2px solid var(--clr-border);
-        }
-
-        /* BOTONES */
-        .btn-erp-primary {
-            background: var(--clr-navy); color: #FFF !important;
-            border: 1px solid var(--clr-border); border-radius: 8px;
-            padding: .45rem 1.2rem; font-weight: 600; font-size: .88rem;
-            cursor: pointer; text-decoration: none; display: inline-block;
-            transition: background .2s, color .2s;
-        }
-        .btn-erp-primary:hover { background: #333333; color: #fff !important; }
+    /* TOKENS MODO CLARO */
+    :root, [data-theme="light"] {
+        --clr-navy   : #000000;
+        --clr-royal  : #2b2b2b;
+        --clr-sky    : #4a4a4a;
+        --clr-ice    : #f2f2f2;
+        --clr-gold   : #ffffff;
+        --clr-amber  : #e0e0e0;
+        --clr-cream  : #f8f9fa;
+        --clr-surface: #ffffff;
+        --clr-text   : #121212;
+        --clr-muted  : #555555;
+        --clr-border : #cccccc;
+        --clr-overlay: rgba(255, 255, 255, 0.70);
+        --clr-danger : #000000;
+        --clr-ok     : #333333;
+        --shadow-sm  : 0 2px 8px rgba(0,0,0,.1);
+        --shadow-md  : 0 4px 16px rgba(0,0,0,.15);
         
-        .btn-erp-gold {
-            background: #ffffff; color: #000000 !important;
-            border: 1px solid #000000; border-radius: 8px;
-            padding: .45rem 1.2rem; font-weight: 700;
-            cursor: pointer; text-decoration: none; display: inline-block;
-            transition: background .2s;
-        }
-        .btn-erp-gold:hover { background: #e6e6e6; }
+        /* Imagen de fondo para MODO CLARO */
+        --bg-image   : url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiRauhvi0QMzaq18-shkloKlXOpOFE1KbIJFVpQNFmAA&s=10');
+    }
+
+    /* TOKENS MODO OSCURO */
+    [data-theme="dark"] {
+        --clr-navy   : #121212;
+        --clr-royal  : #1e1e1e;
+        --clr-sky    : #aaaaaa;
+        --clr-ice    : #242424;
+        --clr-gold   : #ffffff;
+        --clr-amber  : #cccccc;
+        --clr-cream  : #1a1a1a;
+        --clr-surface: #181818;
+        --clr-text   : #ffffff;
+        --clr-muted  : #aaaaaa;
+        --clr-border : #333333;
+        --clr-overlay: rgba(10, 10, 10, 0.75);
+        --clr-danger : #ffffff;
+        --clr-ok     : #cccccc;
+        --shadow-sm  : 0 2px 8px rgba(0,0,0,.5);
+        --shadow-md  : 0 4px 16px rgba(0,0,0,.7);
         
-        .btn-erp-danger {
-            background: #000000; color: #FFF !important; border: 1px solid #ffffff;
-            border-radius: 8px; padding: .4rem 1rem;
-            font-weight: 600; font-size: .85rem;
-            cursor: pointer; text-decoration: none; display: inline-block;
-        }
-        .btn-erp-sm { padding: .25rem .7rem; font-size: .8rem; }
+        /* Imagen de fondo para MODO OSCURO */
+        --bg-image   : url('https://static.wikia.nocookie.net/forsaken2024/images/1/12/Noob.png');
+    }
 
-        /* FORMULARIOS */
-        .erp-label {
-            font-size: .83rem; font-weight: 600; color: var(--clr-muted);
-            text-transform: uppercase; letter-spacing: .05em;
-            display: block; margin-bottom: .3rem;
-        }
-        .erp-input {
-            background: var(--clr-surface); border: 1.5px solid var(--clr-border);
-            border-radius: 8px; color: var(--clr-text);
-            padding: .5rem .85rem; width: 100%; font-size: .93rem;
-            transition: border-color .2s, box-shadow .2s;
-        }
-        .erp-input:focus {
-            outline: none; border-color: #000000;
-            box-shadow: 0 0 0 3px rgba(0,0,0,.15);
-        }
+    /* REGLAS PARA SÍMBOLO DINÁMICO */
+    .theme-symbol::before {
+        content: "𝄢";
+    }
+    [data-theme="dark"] .theme-symbol::before {
+        content: "π";
+    }
 
-        /* BADGES */
-        .badge-erp-active {
-            background: #000000; color: #ffffff;
-            border: 1px solid #000000;
-            font-size: .75rem; padding: .2rem .6rem;
-            border-radius: 20px; font-weight: 600;
-        }
-        .badge-erp-inactive {
-            background: #ffffff; color: #000000;
-            border: 1px solid #000000;
-            font-size: .75rem; padding: .2rem .6rem; border-radius: 20px;
-        }
-        .badge-erp-gold {
-            background: var(--clr-surface); color: var(--clr-text);
-            border: 1px solid var(--clr-border);
-            font-size: .75rem; padding: .2rem .7rem;
-            border-radius: 20px; font-weight: 700;
-        }
+    /* BASE E IMAGEN DE FONDO */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+        font-family: 'Inter','Segoe UI',sans-serif;
+        font-size: 15px;
+        color: var(--clr-text);
+        line-height: 1.6;
+        transition: background .25s, color .25s;
+        margin: 0;
+        
+        background-image: linear-gradient(var(--clr-overlay), var(--clr-overlay)), var(--bg-image);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
 
-        /* ALERTAS MONOCROMÁTICAS */
-        .erp-alert-danger, .erp-alert-info, .erp-alert-success {
-            background: var(--clr-surface); border: 1px solid var(--clr-border);
-            border-left: 5px solid var(--clr-text); border-radius: 8px;
-            padding: 1rem 1.25rem; color: var(--clr-text);
-        }
+    /* CONTENIDO PRINCIPAL */
+    .erp-main { 
+        padding: 2rem 0; 
+        min-height: calc(100vh - 110px); 
+    }
 
-        /* TÍTULO DE PÁGINA */
-        .erp-page-title {
-            display: flex; align-items: center; gap: 1rem;
-            margin-bottom: 1.5rem; padding-bottom: .75rem;
-            border-bottom: 2px solid var(--clr-border);
-        }
-        .erp-page-title h2 {
-            font-family: 'Playfair Display',serif;
-            font-size: 1.6rem; color: var(--clr-text); margin: 0;
-        }
+    /* CARDS */
+    .erp-card {
+        background: var(--clr-surface);
+        border: 1px solid var(--clr-border);
+        border-radius: 12px; 
+        box-shadow: var(--shadow-sm);
+        padding: 1.5rem; 
+        margin-bottom: 1.5rem;
+        color: var(--clr-text);
+        transition: background .25s, color .25s, box-shadow .2s;
+    }
+    .erp-card:hover { box-shadow: var(--shadow-md); }
 
-        /* CÓDIGO */
-        code, .mono {
-            font-family: 'JetBrains Mono',Consolas,monospace;
-            font-size: .85em; color: var(--clr-text);
-            background: var(--clr-ice); padding: .1em .4em; border-radius: 4px;
-            border: 1px solid var(--clr-border);
-        }
+    /* BOTONES MONOCROMÁTICOS RESTAURADOS */
+    .btn-erp-primary {
+        background: var(--clr-text);
+        color: var(--clr-surface) !important;
+        border: 1px solid var(--clr-text);
+        border-radius: 8px;
+        padding: .45rem 1.2rem;
+        font-weight: 600;
+        font-size: .88rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: opacity .2s, background .2s, color .2s;
+    }
+    .btn-erp-primary:hover {
+        opacity: 0.85;
+        color: var(--clr-surface) !important;
+    }
 
-        /* FOOTER */
-        .erp-footer {
-            background: var(--clr-navy); color: rgba(255,255,255,.7);
-            text-align: center; font-size: .78rem;
-            padding: .75rem; border-top: 2px solid var(--clr-border);
-        }
-    </style>
+    .btn-erp-gold, .btn-erp-secondary {
+        background: var(--clr-surface);
+        color: var(--clr-text) !important;
+        border: 1px solid var(--clr-border);
+        border-radius: 8px;
+        padding: .45rem 1.2rem;
+        font-weight: 600;
+        font-size: .88rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: background .2s;
+    }
+    .btn-erp-gold:hover, .btn-erp-secondary:hover {
+        background: var(--clr-ice);
+        color: var(--clr-text) !important;
+    }
+
+    .btn-erp-danger {
+        background: #c0392b;
+        color: #ffffff !important;
+        border: 1px solid #c0392b;
+        border-radius: 8px;
+        padding: .4rem 1rem;
+        font-weight: 600;
+        font-size: .85rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: opacity .2s;
+    }
+    .btn-erp-danger:hover {
+        opacity: 0.85;
+    }
+
+    .btn-erp-sm { 
+        padding: .25rem .7rem; 
+        font-size: .8rem; 
+    }
+
+    /* TABLAS Y LISTAS */
+    .erp-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--clr-surface);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .erp-table thead th {
+        background: var(--clr-navy);
+        color: #ffffff;
+        padding: .75rem 1rem;
+        font-size: .85rem;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--clr-border);
+    }
+    .erp-table tbody td {
+        padding: .75rem 1rem;
+        border-bottom: 1px solid var(--clr-border);
+        color: var(--clr-text);
+    }
+    .erp-table tbody tr:nth-child(even) td {
+        background: var(--clr-ice);
+    }
+
+    /* FORMULARIOS */
+    .erp-label {
+        font-size: .83rem; 
+        font-weight: 600; 
+        color: var(--clr-muted);
+        text-transform: uppercase; 
+        letter-spacing: .05em;
+        display: block; 
+        margin-bottom: .3rem;
+    }
+    .erp-input {
+        background: var(--clr-surface); 
+        border: 1.5px solid var(--clr-border);
+        border-radius: 8px; 
+        color: var(--clr-text);
+        padding: .5rem .85rem; 
+        width: 100%; 
+        font-size: .93rem;
+        transition: border-color .2s, box-shadow .2s;
+    }
+    .erp-input:focus {
+        outline: none; 
+        border-color: var(--clr-text);
+        box-shadow: 0 0 0 3px rgba(0,0,0,.15);
+    }
+
+    /* BADGES */
+    .badge-erp-active {
+        background: var(--clr-text); color: var(--clr-surface);
+        border: 1px solid var(--clr-text);
+        font-size: .75rem; padding: .2rem .6rem;
+        border-radius: 20px; font-weight: 600;
+    }
+    .badge-erp-inactive {
+        background: var(--clr-surface); color: var(--clr-text);
+        border: 1px solid var(--clr-border);
+        font-size: .75rem; padding: .2rem .6rem; border-radius: 20px;
+    }
+
+    /* TÍTULOS DE PÁGINA */
+    .erp-page-title {
+        display: flex; align-items: center; gap: 1rem;
+        margin-bottom: 1.5rem; padding-bottom: .75rem;
+        border-bottom: 2px solid var(--clr-border);
+    }
+    .erp-page-title h2 {
+        font-family: 'Playfair Display',serif;
+        font-size: 1.6rem; color: var(--clr-text); margin: 0;
+    }
+
+    /* NAVBAR Y FOOTER */
+    .erp-navbar {
+        background: var(--clr-navy);
+        border-bottom: 2px solid var(--clr-border);
+        padding: .65rem 1.5rem;
+        display: flex; align-items: center;
+        justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+        box-shadow: var(--shadow-md);
+    }
+    .erp-brand {
+        font-family: 'Playfair Display',Georgia,serif;
+        font-size: 1.3rem; font-weight: 700;
+        color: #ffffff !important;
+        text-decoration: none; letter-spacing: .04em;
+        display: flex; align-items: center; gap: .4rem;
+    }
+    .erp-brand span { color: rgba(255,255,255,.6); font-weight: 300; font-size: .85em; }
+    .erp-nav-links { display: flex; align-items: center; gap: .25rem; flex-wrap: wrap; }
+    .erp-nav-link {
+        color: rgba(255,255,255,.8) !important;
+        font-size: .88rem; font-weight: 500;
+        padding: .35rem .75rem; border-radius: 6px;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+    }
+    .erp-nav-link:hover, .erp-nav-link.active {
+        background: var(--clr-royal); color: #FFF !important;
+    }
+    .theme-toggle {
+        background: #ffffff; color: #000000;
+        border: 1px solid #000000; border-radius: 50%;
+        width: 32px; height: 32px; font-size: .9rem;
+        cursor: pointer; transition: transform .2s, background .2s;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .theme-toggle:hover { transform: scale(1.1); }
+
+    .erp-footer {
+        background: var(--clr-navy); color: rgba(255,255,255,.7);
+        text-align: center; font-size: .78rem;
+        padding: .75rem; border-top: 2px solid var(--clr-border);
+    }
+</style>
     {% block extra_css %}{% endblock %}
 </head>
 
