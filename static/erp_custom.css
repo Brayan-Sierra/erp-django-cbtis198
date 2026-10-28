@@ -23,7 +23,6 @@ body,
 }
 
 /* ── 2. TÍTULOS Y TEXTOS EN MODO C00LGUI ────────────────────────────── */
-/* Corregir el título "Panel de control" y subtítulos para que destaquen en rojo/blanco */
 h1, h2, h3, h4, .content-header h1, .brand-text {
     color: #ff3333 !important;
     text-shadow: 0 0 8px rgba(255, 0, 0, 0.8), 0 0 15px rgba(255, 0, 0, 0.4);
@@ -52,7 +51,7 @@ h1, h2, h3, h4, .content-header h1, .brand-text {
     color: #ffffff !important;
 }
 
-/* ── 4. BARRA DE NAVEGACIÓN Y MENU LATERAL ──────────────────────────── */
+/* ── 4. BARRA DE NAVEGACIÓN Y MENÚ LATERAL IZQUIERDO (SIDEBAR) ───────── */
 .main-header.navbar {
     background-color: #0a0a0a !important;
     border-bottom: 2px solid #ff0000 !important;
@@ -62,30 +61,60 @@ h1, h2, h3, h4, .content-header h1, .brand-text {
     color: #ffffff !important;
 }
 
-.main-sidebar, .sidebar {
-    background-color: #080808 !important;
+/* Sidebar lateral completo */
+.main-sidebar, 
+.sidebar, 
+aside.main-sidebar,
+.nav-sidebar {
+    background-color: #030303 !important;
     border-right: 2px solid #ff0000 !important;
+    box-shadow: 4px 0 15px rgba(255, 0, 0, 0.25) !important;
 }
 
+/* Encabezado del usuario/marca en el sidebar */
 .brand-link {
-    background-color: #1a0000 !important;
+    background-color: #120000 !important;
     border-bottom: 2px solid #ff0000 !important;
 }
 
+/* Títulos de categorías dentro del menú izquierdo (ej: "Clientes", "Ventas") */
+.nav-header {
+    color: #ff4d4d !important;
+    font-weight: bold !important;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    background: rgba(20, 0, 0, 0.6) !important;
+    border-bottom: 1px solid #550000 !important;
+    padding: 0.4rem 0.8rem !important;
+    margin-top: 0.5rem !important;
+}
+
+/* Enlaces del menú lateral */
 .nav-sidebar .nav-link {
-    color: #e0e0e0 !important;
+    color: #d1d1d1 !important;
+    transition: all 0.2s ease-in-out;
 }
 
+/* Efecto Hover (al pasar el ratón) */
 .nav-sidebar .nav-link:hover {
-    background-color: #ff0000 !important;
+    background-color: #8b0000 !important;
     color: #ffffff !important;
-    box-shadow: 0 0 10px #ff0000;
+    box-shadow: 0 0 10px #ff0000 !important;
+    border-left: 4px solid #ff0000 !important;
 }
 
+/* Opción activa en el menú */
 .nav-sidebar .nav-link.active {
-    background-color: #ff0000 !important;
+    background-color: #b30000 !important;
     color: #ffffff !important;
     font-weight: bold !important;
+    border-left: 4px solid #ffffff !important;
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.8) !important;
+}
+
+/* Iconos del menú lateral */
+.nav-sidebar .nav-icon {
+    color: #ff3333 !important;
 }
 
 /* ── 5. TABLAS, ENLACES Y ACCIONES RECIENTES ──────────────────────── */
@@ -157,4 +186,23 @@ h1, h2, h3, h4, .content-header h1, .brand-text {
     padding: 4px 14px !important;
     border: 1px solid #ff3333 !important;
     box-shadow: 0 0 8px #ff0000;
+}
+
+/* ── OCULTAR AVATAR/LOGO Y CAMBIAR POR SÍMBOLO C00LGUI EN LOGIN ────── */
+.login-box .login-logo img,
+.login-box .brand-image,
+.login-box .profile-user-img,
+.login-box img.elevation-3 {
+    display: none !important;
+}
+
+/* Opcional: Si deseas poner el símbolo de la Clave de Fa sobre la caja de login */
+.login-box::before {
+    content: "𝄢";
+    display: block;
+    text-align: center;
+    font-size: 3rem;
+    color: #ff0000;
+    text-shadow: 0 0 15px #ff0000;
+    margin-bottom: 0.5rem;
 }
