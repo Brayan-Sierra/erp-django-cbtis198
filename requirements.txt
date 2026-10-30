@@ -12,7 +12,7 @@ filetype==1.2.0
 gunicorn==26.2.0
 jmespath==1.1.0
 pillow==12.3.0
-psycopg2-binary==2.9.9
+psycopg2-binary
 python-dateutil==2.9.0.post0
 s3transfer==0.19.3
 six==1.17.0
