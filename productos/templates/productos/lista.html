@@ -8,11 +8,16 @@
     <span style="margin-left:auto;color:var(--clr-muted);font-size:.85rem;">
         {{ page_obj.paginator.count }} producto(s)
     </span>
-    {% if user.is_authenticated %}
-        <a href="{% url 'productos:crear' %}" class="btn-erp-gold">
-            + Nuevo producto
+    <div style="display:flex;gap:.5rem;align-items:center;">
+        <a href="{% url 'productos:exportar_excel' %}" class="btn-erp-primary">
+            📊 Exportar a Excel
         </a>
-    {% endif %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'productos:crear' %}" class="btn-erp-gold">
+                + Nuevo producto
+            </a>
+        {% endif %}
+    </div>
 </div>
 
 {% if productos %}
