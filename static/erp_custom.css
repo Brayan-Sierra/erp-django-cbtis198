@@ -1,0 +1,208 @@
+/* static/erp_custom.css
+   Estilo c00lgui (Roblox Retro Neón) + ERP Django Admin
+*/
+
+/* ── 1. BASE Y FONDO C00LGUI ────────────────────────────────────────── */
+body, 
+.wrapper, 
+.content-wrapper, 
+.main-footer {
+    background-color: #050505 !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), 
+                      url('https://th.bing.com/th/id/OIP.Ia8UY_RsKHw7mp8D5MTxHwHaEu?w=282&h=180&c=7&r=0&o=7&pid=1.7&rm=3') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    color: #ffffff !important;
+}
+
+.content-wrapper, 
+.content {
+    background-color: transparent !important;
+}
+
+/* ── 2. TÍTULOS Y TEXTOS EN MODO C00LGUI ────────────────────────────── */
+h1, h2, h3, h4, .content-header h1, .brand-text {
+    color: #ff3333 !important;
+    text-shadow: 0 0 8px rgba(255, 0, 0, 0.8), 0 0 15px rgba(255, 0, 0, 0.4);
+    font-weight: 800 !important;
+}
+
+.breadcrumb-item a, .breadcrumb-item.active {
+    color: #ffffff !important;
+}
+
+/* ── 3. TARJETAS Y CONTENEDORES ESTILO C00LGUI ──────────────────────── */
+.content-wrapper .card,
+.content-wrapper .small-box,
+.content-wrapper .table-responsive,
+.app-module-card {
+    background-color: rgba(15, 15, 15, 0.90) !important;
+    border: 2px solid #ff0000 !important;
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.35) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+}
+
+.card-header, .card-footer {
+    background-color: rgba(30, 0, 0, 0.8) !important;
+    border-bottom: 1px solid #ff0000 !important;
+    color: #ffffff !important;
+}
+
+/* ── 4. BARRA DE NAVEGACIÓN Y MENÚ LATERAL IZQUIERDO (SIDEBAR) ───────── */
+.main-header.navbar {
+    background-color: #0a0a0a !important;
+    border-bottom: 2px solid #ff0000 !important;
+}
+
+.main-header .nav-link {
+    color: #ffffff !important;
+}
+
+/* Sidebar lateral completo */
+.main-sidebar, 
+.sidebar, 
+aside.main-sidebar,
+.nav-sidebar {
+    background-color: #030303 !important;
+    border-right: 2px solid #ff0000 !important;
+    box-shadow: 4px 0 15px rgba(255, 0, 0, 0.25) !important;
+}
+
+/* Encabezado del usuario/marca en el sidebar */
+.brand-link {
+    background-color: #120000 !important;
+    border-bottom: 2px solid #ff0000 !important;
+}
+
+/* Títulos de categorías dentro del menú izquierdo (ej: "Clientes", "Ventas") */
+.nav-header {
+    color: #ff4d4d !important;
+    font-weight: bold !important;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    background: rgba(20, 0, 0, 0.6) !important;
+    border-bottom: 1px solid #550000 !important;
+    padding: 0.4rem 0.8rem !important;
+    margin-top: 0.5rem !important;
+}
+
+/* Enlaces del menú lateral */
+.nav-sidebar .nav-link {
+    color: #d1d1d1 !important;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Efecto Hover (al pasar el ratón) */
+.nav-sidebar .nav-link:hover {
+    background-color: #8b0000 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 10px #ff0000 !important;
+    border-left: 4px solid #ff0000 !important;
+}
+
+/* Opción activa en el menú */
+.nav-sidebar .nav-link.active {
+    background-color: #b30000 !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    border-left: 4px solid #ffffff !important;
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.8) !important;
+}
+
+/* Iconos del menú lateral */
+.nav-sidebar .nav-icon {
+    color: #ff3333 !important;
+}
+
+/* ── 5. TABLAS, ENLACES Y ACCIONES RECIENTES ──────────────────────── */
+.content-wrapper a {
+    color: #ff6666 !important;
+    font-weight: 600;
+}
+
+.content-wrapper a:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 5px #ff0000;
+}
+
+/* Panel lateral derecho (Acciones recientes) */
+.timeline-item, .action-list {
+    background-color: rgba(20, 0, 0, 0.85) !important;
+    color: #ffffff !important;
+    border: 1px solid #ff3333 !important;
+}
+
+/* ── 6. BOTONES C00LGUI (ROJO / NEGRO NEÓN) ─────────────────────────── */
+.btn-primary, .btn-success, .btn-danger, .btn-info, .btn-dark {
+    background-color: #990000 !important;
+    border: 1px solid #ff3333 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
+    font-weight: bold !important;
+}
+
+.btn-primary:hover, .btn-success:hover, .btn-danger:hover {
+    background-color: #ff0000 !important;
+    box-shadow: 0 0 12px #ff0000;
+    color: #ffffff !important;
+}
+
+.btn-secondary, .btn-outline-dark, .btn-warning {
+    background-color: #111111 !important;
+    border: 1px solid #ff3333 !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary:hover {
+    background-color: #333333 !important;
+    color: #ff3333 !important;
+}
+
+/* ── 7. REEMPLAZOS CLAVE DE FA Y PI ────────────────────────────────── */
+.user-panel::before {
+    content: "𝄢" !important;
+    font-size: 1.4rem !important;
+    color: #ff0000 !important;
+    background-color: #000000 !important;
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid #ff0000 !important;
+    box-shadow: 0 0 8px #ff0000;
+}
+
+.navbar-nav .nav-link[href*="dark-mode-toggle"],
+.navbar-nav a[href*="dark-mode"] {
+    font-weight: bold !important;
+    color: #ffffff !important;
+    background-color: #990000 !important;
+    border-radius: 20px !important;
+    padding: 4px 14px !important;
+    border: 1px solid #ff3333 !important;
+    box-shadow: 0 0 8px #ff0000;
+}
+
+/* ── OCULTAR AVATAR/LOGO Y CAMBIAR POR SÍMBOLO C00LGUI EN LOGIN ────── */
+.login-box .login-logo img,
+.login-box .brand-image,
+.login-box .profile-user-img,
+.login-box img.elevation-3 {
+    display: none !important;
+}
+
+/* Opcional: Si deseas poner el símbolo de la Clave de Fa sobre la caja de login */
+.login-box::before {
+    content: "𝄢";
+    display: block;
+    text-align: center;
+    font-size: 3rem;
+    color: #ff0000;
+    text-shadow: 0 0 15px #ff0000;
+    margin-bottom: 0.5rem;
+}

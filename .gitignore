@@ -1,0 +1,19 @@
+# Archivos de entorno y compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+env_erp/
+env_311/
+env_erp_old/
+venv/
+
+# Configuración y base de datos local
+db.sqlite3
+.env
+.vscode/
+
+# Archivos estáticos y de media
+staticfiles/
+media/
