@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'rest_framework.authtoken',    # ← agregar
+    'django_filters',              # ← nuevo (nombre de app es django_filters)
     'whitenoise.runserver_nostatic',
     # Apps del ERP
     'clientes',
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'ventas',
     'reportes',
     'configuracion',
+    'catalogo',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'catalogo.context_processors.carrito_info',  # ← AGREGAR AQUÍ (línea 56)
             ],
         },
     },

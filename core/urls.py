@@ -1,4 +1,4 @@
-# core/urls.py — agregar las rutas de API y token
+# core/urls.py — agregar las rutas de API, token y catálogo público
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -26,6 +26,8 @@ urlpatterns = [
     # API REST
     path('api/',        include((api_urlpatterns, 'api'))),
     path('api/auth/token/', obtain_auth_token, name='api_token'),
+    # E-commerce público — W13
+    path('catalogo/',   include('catalogo.urls', namespace='catalogo')),  # ← NUEVA RUTA
     # Apps del ERP (interfaz web)
     path('clientes/',    include('clientes.urls',    namespace='clientes')),
     path('proveedores/', include('proveedores.urls', namespace='proveedores')),
