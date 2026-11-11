@@ -186,7 +186,7 @@ def checkout(request):
         cliente = obtener_o_crear_cliente(request.user)
         numero_pedido = generar_numero_pedido()
 
-        # 1. Creación del pedido
+        # 1. Crear Pedido
         pedido_kwargs = {
             'cliente': cliente,
             'numero_pedido': numero_pedido,
@@ -199,37 +199,27 @@ def checkout(request):
 
         pedido = Pedido.objects.create(**pedido_kwargs)
 
-        # 2. Crear la Venta vinculada a Pedido o Cliente si DetalleVenta requiere Venta
-        venta_obj = None
-        if hasattr(DetalleVenta, 'venta'):
-            venta_kwargs = {}
-            if hasattr(Venta, 'cliente'):
-                venta_kwargs['cliente'] = cliente
-            if hasattr(Venta, 'pedido'):
-                venta_kwargs['pedido'] = pedido
-            if hasattr(Venta, 'total'):
-                venta_kwargs['total'] = totales['total']
-            
-            venta_obj = Venta.objects.create(**venta_kwargs)
+        # 2. Crear Venta (sin pasar 'total' porque es una @property en el modelo Venta)
+        venta_kwargs = {}
+        if hasattr(Venta, 'cliente'):
+            venta_kwargs['cliente'] = cliente
+        if hasattr(Venta, 'pedido'):
+            venta_kwargs['pedido'] = pedido
 
-        # 3. Creación de los detalles
+        venta_obj = Venta.objects.create(**venta_kwargs)
+
+        # 3. Crear DetalleVenta
         for prod_id, datos in carrito.items():
             producto = get_object_or_404(Producto, pk=int(prod_id))
             
-            detalle_kwargs = {
-                'producto': producto,
-                'cantidad': int(datos['cantidad']),
-                'precio_unitario': Decimal(datos['precio']),
-            }
+            DetalleVenta.objects.create(
+                venta=venta_obj,
+                producto=producto,
+                cantidad=int(datos['cantidad']),
+                precio_unitario=Decimal(datos['precio']),
+            )
 
-            if hasattr(DetalleVenta, 'venta') and venta_obj:
-                detalle_kwargs['venta'] = venta_obj
-            elif hasattr(DetalleVenta, 'pedido'):
-                detalle_kwargs['pedido'] = pedido
-
-            DetalleVenta.objects.create(**detalle_kwargs)
-
-        # 4. Intent de Stripe
+        # 4. Crear PaymentIntent en Stripe
         stripe.api_key = settings.STRIPE_SECRET_KEY
         monto_centavos = int(totales['total'] * 100)
 
@@ -255,7 +245,6 @@ def checkout(request):
         'client_secret': '',
         'publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
     })
-
 
 def pago_exitoso(request, pedido_id: int):
     """Vista de confirmación post-pago exitoso."""
