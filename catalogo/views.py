@@ -186,11 +186,10 @@ def checkout(request):
         cliente = obtener_o_crear_cliente(request.user)
         numero_pedido = generar_numero_pedido()
 
+        # Se eliminaron 'subtotal' e 'iva' para coincidir con tu modelo Pedido
         pedido = Pedido.objects.create(
             cliente=cliente,
             numero_pedido=numero_pedido,
-            subtotal=totales['subtotal'],
-            iva=totales['iva_monto'],
             total_pagado=totales['total'],
             estado='pendiente',
         )
