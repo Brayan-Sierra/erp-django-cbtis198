@@ -186,22 +186,38 @@ def checkout(request):
         cliente = obtener_o_crear_cliente(request.user)
         numero_pedido = generar_numero_pedido()
 
-        # Se eliminaron 'subtotal' e 'iva' para coincidir con tu modelo Pedido
-        pedido = Pedido.objects.create(
-            cliente=cliente,
-            numero_pedido=numero_pedido,
-            total_pagado=totales['total'],
-            estado='pendiente',
-        )
+        # Creación del pedido adaptada a los campos principales
+        pedido_kwargs = {
+            'cliente': cliente,
+            'numero_pedido': numero_pedido,
+            'estado': 'pendiente',
+        }
+        
+        # Asignar total_pagado o total según corresponda en el modelo
+        if hasattr(Pedido, 'total_pagado'):
+            pedido_kwargs['total_pagado'] = totales['total']
+        elif hasattr(Pedido, 'total'):
+            pedido_kwargs['total'] = totales['total']
 
+        pedido = Pedido.objects.create(**pedido_kwargs)
+
+        # Creación de los detalles del pedido
         for prod_id, datos in carrito.items():
             producto = get_object_or_404(Producto, pk=int(prod_id))
-            DetalleVenta.objects.create(
-                pedido=pedido,
-                producto=producto,
-                cantidad=int(datos['cantidad']),
-                precio_unitario=Decimal(datos['precio']),
-            )
+            
+            detalle_kwargs = {
+                'producto': producto,
+                'cantidad': int(datos['cantidad']),
+                'precio_unitario': Decimal(datos['precio']),
+            }
+
+            # Validar la clave foránea hacia Pedido/Venta
+            if hasattr(DetalleVenta, 'venta'):
+                detalle_kwargs['venta'] = pedido
+            elif hasattr(DetalleVenta, 'pedido'):
+                detalle_kwargs['pedido'] = pedido
+
+            DetalleVenta.objects.create(**detalle_kwargs)
 
         stripe.api_key = settings.STRIPE_SECRET_KEY
         monto_centavos = int(totales['total'] * 100)
@@ -235,10 +251,12 @@ def pago_exitoso(request, pedido_id: int):
     pedido = get_object_or_404(Pedido, pk=pedido_id)
 
     _guardar_carrito(request, {})
+    
+    total_monto = getattr(pedido, 'total_pagado', getattr(pedido, 'total', '0.00'))
     messages.success(
         request,
         f'¡Pago exitoso! Tu pedido {pedido.numero_pedido} '
-        f'está confirmado. Total: ${pedido.total_pagado}'
+        f'está confirmado. Total: ${total_monto}'
     )
 
     return render(request, 'catalogo/pago_exitoso.html', {
