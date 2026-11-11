@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView
 
 from productos.models import Producto
-from ventas.models import DetalleVenta, Pedido
+from ventas.models import DetalleVenta, Pedido, Venta
 
 from .checkout_utils import (
     armar_items,
@@ -186,14 +186,12 @@ def checkout(request):
         cliente = obtener_o_crear_cliente(request.user)
         numero_pedido = generar_numero_pedido()
 
-        # Creación del pedido adaptada a los campos principales
+        # 1. Creación del pedido
         pedido_kwargs = {
             'cliente': cliente,
             'numero_pedido': numero_pedido,
             'estado': 'pendiente',
         }
-        
-        # Asignar total_pagado o total según corresponda en el modelo
         if hasattr(Pedido, 'total_pagado'):
             pedido_kwargs['total_pagado'] = totales['total']
         elif hasattr(Pedido, 'total'):
@@ -201,7 +199,20 @@ def checkout(request):
 
         pedido = Pedido.objects.create(**pedido_kwargs)
 
-        # Creación de los detalles del pedido
+        # 2. Crear la Venta vinculada a Pedido o Cliente si DetalleVenta requiere Venta
+        venta_obj = None
+        if hasattr(DetalleVenta, 'venta'):
+            venta_kwargs = {}
+            if hasattr(Venta, 'cliente'):
+                venta_kwargs['cliente'] = cliente
+            if hasattr(Venta, 'pedido'):
+                venta_kwargs['pedido'] = pedido
+            if hasattr(Venta, 'total'):
+                venta_kwargs['total'] = totales['total']
+            
+            venta_obj = Venta.objects.create(**venta_kwargs)
+
+        # 3. Creación de los detalles
         for prod_id, datos in carrito.items():
             producto = get_object_or_404(Producto, pk=int(prod_id))
             
@@ -211,14 +222,14 @@ def checkout(request):
                 'precio_unitario': Decimal(datos['precio']),
             }
 
-            # Validar la clave foránea hacia Pedido/Venta
-            if hasattr(DetalleVenta, 'venta'):
-                detalle_kwargs['venta'] = pedido
+            if hasattr(DetalleVenta, 'venta') and venta_obj:
+                detalle_kwargs['venta'] = venta_obj
             elif hasattr(DetalleVenta, 'pedido'):
                 detalle_kwargs['pedido'] = pedido
 
             DetalleVenta.objects.create(**detalle_kwargs)
 
+        # 4. Intent de Stripe
         stripe.api_key = settings.STRIPE_SECRET_KEY
         monto_centavos = int(totales['total'] * 100)
 
