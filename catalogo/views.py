@@ -186,7 +186,18 @@ def checkout(request):
         cliente = obtener_o_crear_cliente(request.user)
         numero_pedido = generar_numero_pedido()
 
-        # 1. Crear Pedido
+        # Construir el snapshot del carrito para el webhook (W15)
+        snapshot = [
+            {
+                'producto_id': int(prod_id),
+                'nombre':      datos['nombre'],
+                'cantidad':    int(datos['cantidad']),
+                'precio':      str(datos['precio']),
+            }
+            for prod_id, datos in carrito.items()
+        ]
+
+        # 1. Crear Pedido con items_snapshot
         pedido_kwargs = {
             'cliente': cliente,
             'numero_pedido': numero_pedido,
@@ -197,9 +208,12 @@ def checkout(request):
         elif hasattr(Pedido, 'total'):
             pedido_kwargs['total'] = totales['total']
 
+        if hasattr(Pedido, 'items_snapshot'):
+            pedido_kwargs['items_snapshot'] = snapshot
+
         pedido = Pedido.objects.create(**pedido_kwargs)
 
-        # 2. Crear Venta (sin pasar 'total' porque es una @property en el modelo Venta)
+        # 2. Crear Venta
         venta_kwargs = {}
         if hasattr(Venta, 'cliente'):
             venta_kwargs['cliente'] = cliente
@@ -211,7 +225,6 @@ def checkout(request):
         # 3. Crear DetalleVenta
         for prod_id, datos in carrito.items():
             producto = get_object_or_404(Producto, pk=int(prod_id))
-            
             DetalleVenta.objects.create(
                 venta=venta_obj,
                 producto=producto,
