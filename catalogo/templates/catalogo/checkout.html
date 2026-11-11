@@ -37,7 +37,7 @@
 </div>
 
 <div class="row g-4">
-    <!-- Resumen -->
+    <!-- Resumen del pedido -->
     <div class="col-md-5">
         <div class="erp-card">
             <div class="erp-card-header">🛍️ Resumen de tu pedido</div>
@@ -74,7 +74,7 @@
         {% endif %}
     </div>
 
-    <!-- Formulario -->
+    <!-- Formulario de pago -->
     <div class="col-md-7">
         <div class="erp-card">
             <div class="erp-card-header">🔒 Datos de pago</div>
@@ -111,11 +111,13 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 {% if client_secret %}
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-window.addEventListener('load', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const pubKey = "{{ publishable_key }}";
     const secret = "{{ client_secret }}";
 
@@ -133,21 +135,23 @@ window.addEventListener('load', function () {
                 color: '#ffffff',
                 fontFamily: 'Inter, system-ui, sans-serif',
                 fontSize: '16px',
+                iconColor: '#ffffff',
                 '::placeholder': { color: '#8aa0b8' }
             },
-            invalid: { color: '#e74c3c', iconColor: '#e74c3c' }
+            invalid: { color: '#ff6b6b', iconColor: '#ff6b6b' }
         }
     });
 
     card.mount('#card-element');
 
-    card.on('change', function(e) {
-        document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
+    card.on('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        displayError.textContent = event.error ? event.error.message : '';
     });
 
     const btn = document.getElementById('submit-btn');
     if (btn) {
-        btn.addEventListener('click', async function (evt) {
+        btn.onclick = async function (evt) {
             evt.preventDefault();
             btn.disabled = true;
             btn.textContent = '⏳ Procesando pago…';
@@ -163,7 +167,7 @@ window.addEventListener('load', function () {
             } else if (paymentIntent && paymentIntent.status === 'succeeded') {
                 window.location.href = "/catalogo/pago-exitoso/{{ pedido.pk }}/";
             }
-        });
+        };
     }
 });
 </script>
