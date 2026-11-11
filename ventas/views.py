@@ -1,12 +1,17 @@
-from django.shortcuts import redirect, render
+import io
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, DeleteView
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 
 from .forms import DetalleVentaForm, VentaForm
 from .models import DetalleVenta, Venta
+from configuracion.models import ConfiguracionERP
 
 
 class VentaListView(ListView):
@@ -54,6 +59,7 @@ def crear_venta(request):
         'detalle_form': detalle_form,
     })
 
+
 class VentaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model               = Venta
     template_name       = 'ventas/eliminar.html'
@@ -66,3 +72,32 @@ class VentaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         response = super().form_valid(form)
         messages.success(self.request, f'Venta #{pk} eliminada.')
         return response
+
+
+@login_required
+def venta_pdf(request, venta_id: int):
+    """Genera y descarga la factura de una venta en formato PDF en memoria."""
+    venta = get_object_or_404(
+        Venta.objects
+        .select_related('cliente')
+        .prefetch_related('detalles__producto'),
+        pk=venta_id
+    )
+    config = ConfiguracionERP.get_instance()
+    
+    context = {
+        'venta': venta,
+        'config': config,
+    }
+
+    html_string = render_to_string('ventas/factura_pdf.html', context)
+    buffer = io.BytesIO()
+
+    pisa_status = pisa.CreatePDF(html_string, dest=buffer)
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF de la factura', status=500)
+
+    buffer.seek(0)
+    response = HttpResponse(buffer.read(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="factura_{venta.pk:05d}.pdf"'
+    return response

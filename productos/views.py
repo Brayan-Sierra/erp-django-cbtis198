@@ -1,11 +1,18 @@
+import openpyxl
+from openpyxl.styles import Alignment, Font, PatternFill
+
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, UpdateView
 )
+
 from .forms import ProductoForm
 from .models import Producto
+
 
 class ProductoListView(ListView):
     model = Producto
@@ -72,3 +79,45 @@ class ProductoDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
         response = super().form_valid(form)
         messages.success(self.request, f'Producto "{nombre}" eliminado.')
         return response
+
+
+@login_required
+def exportar_excel(request):
+    """Genera y descarga un libro de Excel (.xlsx) con el catálogo de productos."""
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Inventario ERP"
+
+    # Encabezados
+    headers = ["ID", "Nombre", "Categoría", "Proveedor", "Precio ($)", "Stock", "Estado"]
+    ws.append(headers)
+
+    # Aplicar estilos de encabezado (AzulERP)
+    header_font = Font(name="Arial", size=11, bold=True, color="FFFFFF")
+    header_fill = PatternFill(start_color="0A2342", end_color="0A2342", fill_type="solid")
+    
+    for col in range(1, len(headers) + 1):
+        cell = ws.cell(row=1, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = Alignment(horizontal="center")
+
+    # Filas de datos
+    productos = Producto.objects.select_related('categoria', 'proveedor').all()
+    for p in productos:
+        ws.append([
+            p.pk,
+            p.nombre,
+            p.categoria.nombre if p.categoria else "Sin categoría",
+            p.proveedor.nombre if p.proveedor else "Sin proveedor",
+            float(p.precio),
+            p.stock,
+            "Activo" if p.activo else "Inactivo"
+        ])
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response['Content-Disposition'] = 'attachment; filename="inventario_productos.xlsx"'
+    wb.save(response)
+    return response

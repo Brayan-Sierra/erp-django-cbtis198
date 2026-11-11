@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura #{{ venta.pk }}</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 1.5cm;
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 10pt;
+            color: #1A1A2E;
+        }
+        .header {
+            background-color: #0A2342;
+            color: #FFFFFF;
+            padding: 15px;
+            border-bottom: 3px solid #B8860B;
+        }
+        .title {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #D4AF37;
+        }
+        .empresa {
+            font-size: 11pt;
+            color: #E2EAF4;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .table th {
+            background-color: #0A2342;
+            color: #FFFFFF;
+            padding: 6px;
+            font-size: 8.5pt;
+            border-bottom: 2px solid #B8860B;
+        }
+        .table td {
+            padding: 6px;
+            border-bottom: 1px solid #C8D8EC;
+            font-size: 9pt;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .total-box {
+            margin-top: 15px;
+            text-align: right;
+            font-size: 11pt;
+            font-weight: bold;
+            color: #B8860B;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">FACTURA #{{ venta.pk|stringformat:"05d" }}</div>
+        <div class="empresa">{{ config.nombre_empresa }}</div>
+    </div>
+    
+    <p style="margin-top: 12px;"><strong>Cliente:</strong> {{ venta.cliente.nombre }} ({{ venta.cliente.correo }})</p>
+    <p><strong>Fecha de emisión:</strong> {{ venta.fecha|date:"d/m/Y H:i" }} h</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Producto</th>
+                <th class="text-right">Precio Unit.</th>
+                <th class="text-right">Cant.</th>
+                <th class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in venta.detalles.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ d.producto.nombre }}</td>
+                <td class="text-right">${{ d.precio_unitario }}</td>
+                <td class="text-right">{{ d.cantidad }}</td>
+                <td class="text-right">${{ d.subtotal }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center;">Sin detalles registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total-box">
+        Total: ${{ venta.total }} {{ config.moneda }}
+    </div>
+</body>
+</html>

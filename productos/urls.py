@@ -4,6 +4,7 @@ from . import views
 app_name = 'productos'
 
 urlpatterns = [
+    path('exportar-excel/', views.exportar_excel, name='exportar_excel'),
     path('',                             views.ProductoListView.as_view(),   name='lista'),
     path('nuevo/',                       views.ProductoCreateView.as_view(), name='crear'),
     path('<int:producto_id>/',           views.ProductoDetailView.as_view(), name='detalle'),
