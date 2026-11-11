@@ -3,30 +3,28 @@
 
 {% block extra_css %}
 <style>
-    /* Estilos para el Card Element de Stripe */
     #card-element {
-        background: var(--clr-surface, #ffffff);
-        border: 1.5px solid var(--clr-border, #cccccc);
+        background-color: #1a1a2e;
+        border: 1.5px solid var(--clr-border, #444);
         border-radius: 8px;
-        padding: .75rem 1rem;
-        transition: border-color .2s;
-        min-height: 45px;
+        padding: 0.85rem 1rem;
+        min-height: 48px;
     }
     #card-element.StripeElement--focus {
-        border-color: var(--clr-sky, #4a90e2);
-        box-shadow: 0 0 0 3px rgba(74,144,217,.18);
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 3px rgba(74,144,217,.25);
     }
     #card-element.StripeElement--invalid {
-        border-color: var(--clr-danger, #e74c3c);
+        border-color: #e74c3c;
     }
     #card-errors {
-        color: var(--clr-danger, #e74c3c);
+        color: #e74c3c;
         font-size: .85rem;
         margin-top: .4rem;
         min-height: 1.2rem;
     }
     #submit-btn:disabled {
-        opacity: .7;
+        opacity: .65;
         cursor: not-allowed;
     }
 </style>
@@ -35,13 +33,11 @@
 {% block content %}
 <div class="erp-page-title">
     <h2>💳 Proceso de pago</h2>
-    <a href="{% url 'catalogo:carrito' %}"
-       class="btn-erp-primary ms-auto">← Volver al carrito</a>
+    <a href="{% url 'catalogo:carrito' %}" class="btn-erp-primary ms-auto">← Volver al carrito</a>
 </div>
 
 <div class="row g-4">
-
-    <!-- Resumen del pedido -->
+    <!-- Resumen -->
     <div class="col-md-5">
         <div class="erp-card">
             <div class="erp-card-header">🛍️ Resumen de tu pedido</div>
@@ -50,38 +46,22 @@
                 <tr>
                     <td style="padding:.4rem 0;font-size:.9rem;">
                         {{ item.nombre }}
-                        <span style="color:var(--clr-muted);font-size:.82rem;">
-                            × {{ item.cantidad }}
-                        </span>
+                        <span style="color:var(--clr-muted);font-size:.82rem;">× {{ item.cantidad }}</span>
                     </td>
-                    <td style="text-align:right;font-weight:600;font-size:.9rem;padding:.4rem 0;">
-                        ${{ item.subtotal }}
-                    </td>
+                    <td style="text-align:right;font-weight:600;font-size:.9rem;padding:.4rem 0;">${{ item.subtotal }}</td>
                 </tr>
                 {% endfor %}
                 <tr style="border-top:1px solid var(--clr-border);">
-                    <td style="padding:.5rem 0;color:var(--clr-muted);font-size:.88rem;">
-                        Subtotal
-                    </td>
-                    <td style="text-align:right;color:var(--clr-muted);font-size:.88rem;">
-                        ${{ totales.subtotal }}
-                    </td>
+                    <td style="padding:.5rem 0;color:var(--clr-muted);font-size:.88rem;">Subtotal</td>
+                    <td style="text-align:right;color:var(--clr-muted);font-size:.88rem;">${{ totales.subtotal }}</td>
                 </tr>
                 <tr>
-                    <td style="padding:.3rem 0;color:var(--clr-muted);font-size:.88rem;">
-                        IVA ({{ totales.iva_pct }}%)
-                    </td>
-                    <td style="text-align:right;color:var(--clr-muted);font-size:.88rem;">
-                        ${{ totales.iva_monto }}
-                    </td>
+                    <td style="padding:.3rem 0;color:var(--clr-muted);font-size:.88rem;">IVA ({{ totales.iva_pct }}%)</td>
+                    <td style="text-align:right;color:var(--clr-muted);font-size:.88rem;">${{ totales.iva_monto }}</td>
                 </tr>
                 <tr style="border-top:2px solid var(--clr-gold);">
-                    <td style="padding:.6rem 0;font-weight:700;font-size:1rem;">
-                        TOTAL
-                    </td>
-                    <td style="text-align:right;font-weight:700;font-size:1.2rem;color:var(--clr-gold);">
-                        ${{ totales.total }}
-                    </td>
+                    <td style="padding:.6rem 0;font-weight:700;font-size:1rem;">TOTAL</td>
+                    <td style="text-align:right;font-weight:700;font-size:1.2rem;color:var(--clr-gold);">${{ totales.total }}</td>
                 </tr>
             </table>
         </div>
@@ -89,122 +69,99 @@
         {% if pedido %}
         <div class="erp-alert-info" style="margin-top:1rem;">
             <strong>Pedido creado:</strong> {{ pedido.numero_pedido }}<br>
-            <small style="color:var(--clr-muted);">
-                Completa el pago para confirmar tu pedido.
-            </small>
+            <small style="color:var(--clr-muted);">Completa el pago para confirmar tu pedido.</small>
         </div>
         {% endif %}
     </div>
 
-    <!-- Formulario de pago -->
+    <!-- Formulario -->
     <div class="col-md-7">
         <div class="erp-card">
             <div class="erp-card-header">🔒 Datos de pago</div>
 
             {% if client_secret %}
-            <!-- POST: Formulario activo con Stripe.js -->
             <p style="color:var(--clr-muted);font-size:.85rem;margin-bottom:1rem;">
-                Tus datos de pago son procesados de forma segura por Stripe.
-                Nunca pasan por nuestros servidores.
+                Tus datos de pago son procesados de forma segura por Stripe. Nunca pasan por nuestros servidores.
             </p>
 
             <div class="mb-4">
-                <label class="erp-label">Número de tarjeta</label>
+                <label class="erp-label">NÚMERO DE TARJETA</label>
                 <div id="card-element"></div>
                 <div id="card-errors" role="alert"></div>
             </div>
 
-            <button id="submit-btn" class="btn-erp-gold"
-                    style="width:100%;padding:.6rem;font-size:1rem;">
+            <button id="submit-btn" class="btn-erp-gold" style="width:100%;padding:.6rem;font-size:1rem;">
                 🔐 Confirmar pago de ${{ totales.total }}
             </button>
 
             <p style="text-align:center;margin-top:.75rem;color:var(--clr-muted);font-size:.78rem;">
-                Tarjeta de prueba: <code>4242 4242 4242 4242</code>
-                · cualquier fecha futura · cualquier CVC
+                Tarjeta de prueba: <code>4242 4242 4242 4242</code> · cualquier fecha futura · cualquier CVC
             </p>
-
             {% else %}
-            <!-- GET: Iniciar proceso para generar el Pedido y PaymentIntent -->
             <p style="margin-bottom:1.5rem;color:var(--clr-muted);">
                 Haz clic en "Proceder al pago" para generar tu pedido e introducir los datos de tu tarjeta.
             </p>
             <form method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn-erp-gold"
-                        style="width:100%;padding:.6rem;font-size:1rem;">
+                <button type="submit" class="btn-erp-gold" style="width:100%;padding:.6rem;font-size:1rem;">
                     Proceder al pago →
                 </button>
             </form>
             {% endif %}
         </div>
     </div>
-
 </div>
-{% endblock %}
 
-{% block extra_js %}
 {% if client_secret %}
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const publishableKey = "{{ publishable_key }}";
-    const clientSecret   = "{{ client_secret }}";
+window.addEventListener('load', function () {
+    const pubKey = "{{ publishable_key }}";
+    const secret = "{{ client_secret }}";
 
-    if (!publishableKey || !clientSecret || clientSecret === 'None') {
-        console.error("Falta STRIPE_PUBLISHABLE_KEY o client_secret en la vista.");
+    if (!pubKey || pubKey === 'None' || !secret || secret === 'None') {
+        console.error("Claves de Stripe no detectadas en el servidor.");
         return;
     }
 
-    const stripe   = Stripe(publishableKey);
+    const stripe = Stripe(pubKey);
     const elements = stripe.elements();
 
-    // Crear la tarjeta asignando un color visible explícito
     const card = elements.create('card', {
         style: {
             base: {
                 color: '#ffffff',
-                fontFamily: "'Inter', 'Segoe UI', sans-serif",
+                fontFamily: 'Inter, system-ui, sans-serif',
                 fontSize: '16px',
-                '::placeholder': { color: '#aab7c4' },
+                '::placeholder': { color: '#8aa0b8' }
             },
-            invalid: {
-                color: '#e74c3c',
-                iconColor: '#e74c3c',
-            },
-        },
+            invalid: { color: '#e74c3c', iconColor: '#e74c3c' }
+        }
     });
 
     card.mount('#card-element');
 
-    card.on('change', function (event) {
-        const errorDiv = document.getElementById('card-errors');
-        if (event.error) {
-            errorDiv.textContent = event.error.message;
-        } else {
-            errorDiv.textContent = '';
-        }
+    card.on('change', function(e) {
+        document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
     });
 
     const btn = document.getElementById('submit-btn');
     if (btn) {
-        btn.addEventListener('click', async function (e) {
-            e.preventDefault();
+        btn.addEventListener('click', async function (evt) {
+            evt.preventDefault();
             btn.disabled = true;
             btn.textContent = '⏳ Procesando pago…';
 
-            const { error, paymentIntent } = await stripe.confirmCardPayment(
-                clientSecret,
-                { payment_method: { card: card } }
-            );
+            const { paymentIntent, error } = await stripe.confirmCardPayment(secret, {
+                payment_method: { card: card }
+            });
 
             if (error) {
                 document.getElementById('card-errors').textContent = error.message;
                 btn.disabled = false;
                 btn.textContent = '🔐 Confirmar pago de ${{ totales.total }}';
             } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-                const pedidoId = '{{ pedido.pk }}';
-                window.location.href = `/catalogo/pago-exitoso/${pedidoId}/`;
+                window.location.href = "/catalogo/pago-exitoso/{{ pedido.pk }}/";
             }
         });
     }
