@@ -5,21 +5,22 @@
 <style>
     /* Estilos para el Card Element de Stripe */
     #card-element {
-        background: var(--clr-surface);
-        border: 1.5px solid var(--clr-border);
+        background: var(--clr-surface, #ffffff);
+        border: 1.5px solid var(--clr-border, #cccccc);
         border-radius: 8px;
         padding: .75rem 1rem;
         transition: border-color .2s;
+        min-height: 45px;
     }
     #card-element.StripeElement--focus {
-        border-color: var(--clr-sky);
+        border-color: var(--clr-sky, #4a90e2);
         box-shadow: 0 0 0 3px rgba(74,144,217,.18);
     }
     #card-element.StripeElement--invalid {
-        border-color: var(--clr-danger);
+        border-color: var(--clr-danger, #e74c3c);
     }
     #card-errors {
-        color: var(--clr-danger);
+        color: var(--clr-danger, #e74c3c);
         font-size: .85rem;
         margin-top: .4rem;
         min-height: 1.2rem;
@@ -146,63 +147,68 @@
 {% if client_secret %}
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-(function () {
-    'use strict';
+document.addEventListener('DOMContentLoaded', function () {
+    const publishableKey = "{{ publishable_key }}";
+    const clientSecret   = "{{ client_secret }}";
 
-    const publishableKey = "{{ publishable_key|default:'' }}";
-    const clientSecret   = "{{ client_secret|default:'' }}";
-
-    if (!publishableKey || !clientSecret) {
-        console.error("Missing Stripe publishable key or client secret.");
+    if (!publishableKey || !clientSecret || clientSecret === 'None') {
+        console.error("Falta STRIPE_PUBLISHABLE_KEY o client_secret en la vista.");
         return;
     }
 
-    const stripe     = Stripe(publishableKey);
-    const elements   = stripe.elements();
+    const stripe   = Stripe(publishableKey);
+    const elements = stripe.elements();
 
-    // Crear el Card Element con estilos
+    // Crear la tarjeta asignando un color visible explícito
     const card = elements.create('card', {
         style: {
             base: {
+                color: '#ffffff',
                 fontFamily: "'Inter', 'Segoe UI', sans-serif",
-                fontSize: '15px',
-                color: getComputedStyle(document.documentElement)
-                        .getPropertyValue('--clr-text').trim() || '#1A1A2E',
-                '::placeholder': { color: '#8AA0B8' },
+                fontSize: '16px',
+                '::placeholder': { color: '#aab7c4' },
             },
-            invalid: { color: '#C0392B', iconColor: '#C0392B' },
+            invalid: {
+                color: '#e74c3c',
+                iconColor: '#e74c3c',
+            },
         },
     });
+
     card.mount('#card-element');
 
-    // Mostrar errores en tiempo real
     card.on('change', function (event) {
         const errorDiv = document.getElementById('card-errors');
-        errorDiv.textContent = event.error ? event.error.message : '';
-    });
-
-    // Manejar el submit del botón de pago
-    const btn = document.getElementById('submit-btn');
-    btn.addEventListener('click', async function (e) {
-        e.preventDefault();
-        btn.disabled     = true;
-        btn.textContent  = '⏳ Procesando…';
-
-        const { error, paymentIntent } = await stripe.confirmCardPayment(
-            clientSecret,
-            { payment_method: { card: card } }
-        );
-
-        if (error) {
-            document.getElementById('card-errors').textContent = error.message;
-            btn.disabled    = false;
-            btn.textContent = '🔐 Confirmar pago de ${{ totales.total }}';
-        } else if (paymentIntent.status === 'succeeded') {
-            const pedidoId = '{{ pedido.pk }}';
-            window.location.href = `/catalogo/pago-exitoso/${pedidoId}/`;
+        if (event.error) {
+            errorDiv.textContent = event.error.message;
+        } else {
+            errorDiv.textContent = '';
         }
     });
-})();
+
+    const btn = document.getElementById('submit-btn');
+    if (btn) {
+        btn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.textContent = '⏳ Procesando pago…';
+
+            const { error, paymentIntent } = await stripe.confirmCardPayment(
+                clientSecret,
+                { payment_method: { card: card } }
+            );
+
+            if (error) {
+                document.getElementById('card-errors').textContent = error.message;
+                btn.disabled = false;
+                btn.textContent = '🔐 Confirmar pago de ${{ totales.total }}';
+            } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                const pedidoId = '{{ pedido.pk }}';
+                window.location.href = `/catalogo/pago-exitoso/${pedidoId}/`;
+            }
+        });
+    }
+});
 </script>
 {% endif %}
 {% endblock %}
