@@ -174,85 +174,60 @@ def vaciar_carrito(request):
 
 @login_required
 def checkout(request):
-    """Proceso de pago: muestra resumen y crea PaymentIntent de Stripe."""
     carrito = _obtener_carrito(request)
     if not carrito:
         messages.warning(request, 'Tu carrito está vacío.')
         return redirect('catalogo:catalogo')
 
-    totales         = calcular_totales(carrito)
-    items           = armar_items(carrito)
-    publishable_key = settings.STRIPE_PUBLISHABLE_KEY
+    totales = calcular_totales(carrito)
+    items = armar_items(carrito)
 
     if request.method == 'POST':
-        try:
-            # 1. Vincular cliente
-            cliente = obtener_o_crear_cliente(request.user)
+        cliente = obtener_o_crear_cliente(request.user)
+        numero_pedido = generar_numero_pedido()
 
-            # 2. Crear snapshot del carrito (W15)
-            snapshot = [
-                {
-                    'producto_id': int(prod_id),
-                    'nombre':      datos['nombre'],
-                    'cantidad':    int(datos['cantidad']),
-                    'precio':      datos['precio'],
-                }
-                for prod_id, datos in carrito.items()
-            ]
+        pedido = Pedido.objects.create(
+            cliente=cliente,
+            numero_pedido=numero_pedido,
+            subtotal=totales['subtotal'],
+            iva=totales['iva_monto'],
+            total_pagado=totales['total'],
+            estado='pendiente',
+        )
 
-            # 3. Crear el Pedido ÚNICO en BD
-            numero = generar_numero_pedido()
-            pedido = Pedido.objects.create(
-                numero_pedido  = numero,
-                cliente        = cliente,
-                estado         = 'pendiente',
-                total_pagado   = totales['total'],
-                items_snapshot = snapshot,
+        for prod_id, datos in carrito.items():
+            producto = get_object_or_404(Producto, pk=int(prod_id))
+            DetalleVenta.objects.create(
+                pedido=pedido,
+                producto=producto,
+                cantidad=int(datos['cantidad']),
+                precio_unitario=Decimal(datos['precio']),
             )
 
-            # 4. Crear PaymentIntent en Stripe
-            monto_centavos = int(totales['total'] * 100)
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        monto_centavos = int(totales['total'] * 100)
 
-            intent = stripe.PaymentIntent.create(
-                amount          = monto_centavos,
-                currency        = 'mxn',
-                metadata        = {
-                    'pedido_id':  pedido.pk,
-                    'pedido_num': pedido.numero_pedido,
-                    'cliente':    cliente.nombre,
-                },
-                idempotency_key = f'pedido-{pedido.pk}',
-            )
+        intent = stripe.PaymentIntent.create(
+            amount=monto_centavos,
+            currency='mxn',
+            metadata={'pedido_id': str(pedido.id)}
+        )
 
-            return render(request, 'catalogo/checkout.html', {
-                'carrito':         carrito,
-                'items':           items,
-                'totales':         totales,
-                'pedido':          pedido,
-                'client_secret':   intent.client_secret,
-                'publishable_key': publishable_key,
-            })
-
-        except stripe.error.StripeError as exc:
-            messages.error(
-                request,
-                f'Error al conectar con Stripe: {exc.user_message}'
-            )
-            return redirect('catalogo:pago_error')
-
-        except Exception as exc:
-            messages.error(
-                request,
-                f'Error inesperado en el proceso de pago: {exc}'
-            )
-            return redirect('catalogo:pago_error')
+        return render(request, 'catalogo/checkout.html', {
+            'carrito': carrito,
+            'items': items,
+            'totales': totales,
+            'pedido': pedido,
+            'client_secret': intent.client_secret,
+            'publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
+        })
 
     return render(request, 'catalogo/checkout.html', {
-        'carrito':         carrito,
-        'items':           items,
-        'totales':         totales,
-        'client_secret':   None,
-        'publishable_key': publishable_key,
+        'carrito': carrito,
+        'items': items,
+        'totales': totales,
+        'client_secret': '',
+        'publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
     })
 
 
