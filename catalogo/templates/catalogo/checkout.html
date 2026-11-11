@@ -111,18 +111,16 @@
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 {% if client_secret %}
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const pubKey = "{{ publishable_key }}";
-    const secret = "{{ client_secret }}";
+(function () {
+    const pubKey = "{{ publishable_key|escapejs }}";
+    const secret = "{{ client_secret|escapejs }}";
 
-    if (!pubKey || pubKey === 'None' || !secret || secret === 'None') {
-        console.error("Claves de Stripe no detectadas en el servidor.");
+    if (!pubKey || !secret) {
+        console.error("Faltan claves de Stripe:", { pubKey, secret });
         return;
     }
 
@@ -151,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const btn = document.getElementById('submit-btn');
     if (btn) {
-        btn.onclick = async function (evt) {
+        btn.addEventListener('click', async function (evt) {
             evt.preventDefault();
             btn.disabled = true;
             btn.textContent = '⏳ Procesando pago…';
@@ -167,9 +165,9 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (paymentIntent && paymentIntent.status === 'succeeded') {
                 window.location.href = "/catalogo/pago-exitoso/{{ pedido.pk }}/";
             }
-        };
+        });
     }
-});
+})();
 </script>
 {% endif %}
 {% endblock %}
