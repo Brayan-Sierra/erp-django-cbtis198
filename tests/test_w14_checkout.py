@@ -2,13 +2,6 @@
 
 Usa unittest.mock.patch para simular stripe.PaymentIntent.create
 sin requerir claves reales ni conexión a internet.
-
-Ejecutar con:
-    python manage.py test tests.test_w14_checkout --verbosity=2
-
-Resultado esperado:
-    Ran 8 tests in X.XXXs
-    OK
 """
 from decimal import Decimal
 from unittest.mock import MagicMock, patch
@@ -23,12 +16,18 @@ from productos.models       import Categoria, Producto
 from ventas.models          import Pedido
 
 
-def _setup_carrito(client, producto):
-    """Agrega un producto al carrito de la sesión del test client."""
-    client.post(
-        reverse('catalogo:agregar', args=[producto.pk]),
-        {'cantidad': 2}
-    )
+def _setup_carrito_en_sesion(client, producto):
+    """Puebla el carrito directamente en la sesión de prueba."""
+    session = client.session
+    session['carrito'] = {
+        str(producto.pk): {
+            'nombre': producto.nombre,
+            'precio': str(producto.precio),
+            'cantidad': 2,
+            'imagen': ''
+        }
+    }
+    session.save()
 
 
 class CheckoutAutenticacionTest(TestCase):
@@ -59,7 +58,7 @@ class CheckoutAutenticacionTest(TestCase):
         user = User.objects.create_user('userco', password='pass',
                                         email='userco@test.com')
         self.client.force_login(user)
-        _setup_carrito(self.client, prod)
+        _setup_carrito_en_sesion(self.client, prod)
         r = self.client.get(reverse('catalogo:checkout'))
         self.assertEqual(r.status_code, 200)
 
@@ -68,6 +67,9 @@ class CheckoutPagoTest(TestCase):
     """Tests del proceso POST de checkout con Stripe mockeado."""
 
     def setUp(self):
+        # Limpiar pedidos previos antes de cada prueba de esta clase
+        Pedido.objects.all().delete()
+
         ConfiguracionERP.get_instance()
         cat       = Categoria.objects.create(nombre='Cat')
         self.prod = Producto.objects.create(
@@ -78,7 +80,7 @@ class CheckoutPagoTest(TestCase):
             'payer', password='pass', email='payer@test.com'
         )
         self.client.force_login(self.user)
-        _setup_carrito(self.client, self.prod)   # 2 × 500 = 1000
+        _setup_carrito_en_sesion(self.client, self.prod)   # 2 × 500 = 1000
 
     @patch('catalogo.views.stripe.PaymentIntent.create')
     def test_post_checkout_crea_pedido(self, mock_pi):
@@ -92,7 +94,7 @@ class CheckoutPagoTest(TestCase):
         """El Pedido creado debe tener estado 'pendiente'."""
         mock_pi.return_value = MagicMock(client_secret='pi_test_secret')
         self.client.post(reverse('catalogo:checkout'))
-        pedido = Pedido.objects.first()
+        pedido = Pedido.objects.last()
         self.assertEqual(pedido.estado, 'pendiente')
 
     @patch('catalogo.views.stripe.PaymentIntent.create')
@@ -100,7 +102,7 @@ class CheckoutPagoTest(TestCase):
         """El total del Pedido debe incluir el IVA configurado."""
         mock_pi.return_value = MagicMock(client_secret='pi_test_secret')
         self.client.post(reverse('catalogo:checkout'))
-        pedido    = Pedido.objects.first()
+        pedido    = Pedido.objects.last()
         config    = ConfiguracionERP.get_instance()
         subtotal  = Decimal('1000.00')   # 2 × 500
         iva_pct   = config.iva_porcentaje / 100
@@ -164,7 +166,6 @@ class PagoExitosoTest(TestCase):
         self.client.get(
             reverse('catalogo:pago_exitoso', args=[self.pedido.pk])
         )
-        # El carrito en la sesión debe quedar vacío
         self.assertEqual(
             self.client.session.get('carrito', {}), {}
         )
