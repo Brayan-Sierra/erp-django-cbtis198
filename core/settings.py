@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'rest_framework.authtoken',    # ← agregar
+    'anymail',    # ← agregar
     'django_filters',              # ← nuevo (nombre de app es django_filters)
     'whitenoise.runserver_nostatic',
     # Apps del ERP
@@ -195,6 +196,40 @@ JAZZMIN_SETTINGS = {
     'language_chooser':         False,
 }
 
+# core/settings.py — configuración de correo electrónico
+
+# ── CORREO ELECTRÓNICO ────────────────────────────────────────────────────
+# En desarrollo: usar el backend de consola (imprime en terminal)
+# En producción: anymail con SendGrid
+EMAIL_BACKEND = env(
+    'EMAIL_BACKEND',
+    default='django.core.mail.backends.console.EmailBackend'
+)
+
+# Dirección del remitente visible en los correos
+DEFAULT_FROM_EMAIL = env(
+    'DEFAULT_FROM_EMAIL',
+    default='ERP Django <noreply@erp-django.com>'
+)
+
+# Nombre del asunto con prefijo del sistema
+EMAIL_SUBJECT_PREFIX = '[ERP Django] '
+
+# Administradores que reciben alertas del sistema
+ADMINS = [
+    ('Admin ERP', env('ADMIN_EMAIL', default='admin@erp-django.com')),
+]
+
+# Configuración de django-anymail (SendGrid)
+SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
+ANYMAIL = {
+    'SENDGRID_API_KEY': SENDGRID_API_KEY,
+    # Reintentar envíos fallidos automáticamente
+    'SEND_DEFAULTS': {
+        'esp_extra': {'ip_pool_name': 'transactional'},
+    },
+}
+
 JAZZMIN_SETTINGS = {
     # Identidad
     'site_title':       'ERP Django',
@@ -313,3 +348,28 @@ ACCOUNT_SESSION_REMEMBER       = True           # recordar sesión
 # LOGIN_URL           = '/accounts/login/'
 # LOGIN_REDIRECT_URL  = '/productos/'
 LOGOUT_REDIRECT_URL = '/'
+
+# ── CELERY — Cola de tareas asíncronas ────────────────────────────────────
+CELERY_BROKER_URL     = env('REDIS_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
+
+CELERY_ACCEPT_CONTENT    = ['json']
+CELERY_TASK_SERIALIZER   = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+CELERY_TASK_SOFT_TIME_LIMIT = 300
+CELERY_TASK_TIME_LIMIT       = 360
+
+CELERY_TASK_DEFAULT_QUEUE = 'erp_django'
+
+# Para tests: ejecutar tareas sincrónicamente (sin worker ni Redis activo)
+if 'test' in sys.argv:
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_TASK_EAGER_PROPAGATES = True
+else:
+    CELERY_TASK_ALWAYS_EAGER = False
+    CELERY_TASK_EAGER_PROPAGATES = True

@@ -22,6 +22,8 @@ from .checkout_utils import (
     obtener_o_crear_cliente,
 )
 from .filters import ProductoFilter
+from ventas.tasks import enviar_confirmacion_pedido
+
 
 # Configurar la clave secreta de Stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -186,7 +188,18 @@ def checkout(request):
         cliente = obtener_o_crear_cliente(request.user)
         numero_pedido = generar_numero_pedido()
 
-        # 1. Crear Pedido
+        # Construir el snapshot del carrito para el webhook (W15)
+        snapshot = [
+            {
+                'producto_id': int(prod_id),
+                'nombre':      datos['nombre'],
+                'cantidad':    int(datos['cantidad']),
+                'precio':      str(datos['precio']),
+            }
+            for prod_id, datos in carrito.items()
+        ]
+
+        # 1. Crear Pedido con items_snapshot
         pedido_kwargs = {
             'cliente': cliente,
             'numero_pedido': numero_pedido,
@@ -197,9 +210,12 @@ def checkout(request):
         elif hasattr(Pedido, 'total'):
             pedido_kwargs['total'] = totales['total']
 
+        if hasattr(Pedido, 'items_snapshot'):
+            pedido_kwargs['items_snapshot'] = snapshot
+
         pedido = Pedido.objects.create(**pedido_kwargs)
 
-        # 2. Crear Venta (sin pasar 'total' porque es una @property en el modelo Venta)
+        # 2. Crear Venta
         venta_kwargs = {}
         if hasattr(Venta, 'cliente'):
             venta_kwargs['cliente'] = cliente
@@ -211,7 +227,6 @@ def checkout(request):
         # 3. Crear DetalleVenta
         for prod_id, datos in carrito.items():
             producto = get_object_or_404(Producto, pk=int(prod_id))
-            
             DetalleVenta.objects.create(
                 venta=venta_obj,
                 producto=producto,
@@ -247,16 +262,29 @@ def checkout(request):
     })
 
 def pago_exitoso(request, pedido_id: int):
-    """Vista de confirmación post-pago exitoso."""
+    """Vista de confirmación post-pago exitoso — W16.
+
+    Cambios respecto a W14:
+        Dispara la tarea asíncrona de correo con .delay().
+        La tarea se encola en Redis y el worker la procesa
+        en segundo plano, sin bloquear esta respuesta HTTP.
+    """
+    from django.shortcuts import get_object_or_404
     pedido = get_object_or_404(Pedido, pk=pedido_id)
 
+    # Vaciar el carrito de la sesión
     _guardar_carrito(request, {})
-    
-    total_monto = getattr(pedido, 'total_pagado', getattr(pedido, 'total', '0.00'))
+
+    # ── NUEVO W16: disparar tarea asíncrona de confirmación ───────────
+    # .delay() envía la tarea al broker Redis de forma no bloqueante.
+    # El worker la ejecutará en segundo plano.
+    enviar_confirmacion_pedido.delay(pedido.pk)
+    # ──────────────────────────────────────────────────────────────────
+
     messages.success(
         request,
         f'¡Pago exitoso! Tu pedido {pedido.numero_pedido} '
-        f'está confirmado. Total: ${total_monto}'
+        f'está confirmado. Recibirás un correo de confirmación pronto.'
     )
 
     return render(request, 'catalogo/pago_exitoso.html', {
