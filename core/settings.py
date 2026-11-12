@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'rest_framework.authtoken',    # ← agregar
+    'anymail',    # ← agregar
     'django_filters',              # ← nuevo (nombre de app es django_filters)
     'whitenoise.runserver_nostatic',
     # Apps del ERP
@@ -193,6 +194,40 @@ JAZZMIN_SETTINGS = {
     # UI tweaks
     'changeform_format':        'horizontal_tabs',
     'language_chooser':         False,
+}
+
+# core/settings.py — configuración de correo electrónico
+
+# ── CORREO ELECTRÓNICO ────────────────────────────────────────────────────
+# En desarrollo: usar el backend de consola (imprime en terminal)
+# En producción: anymail con SendGrid
+EMAIL_BACKEND = env(
+    'EMAIL_BACKEND',
+    default='django.core.mail.backends.console.EmailBackend'
+)
+
+# Dirección del remitente visible en los correos
+DEFAULT_FROM_EMAIL = env(
+    'DEFAULT_FROM_EMAIL',
+    default='ERP Django <noreply@erp-django.com>'
+)
+
+# Nombre del asunto con prefijo del sistema
+EMAIL_SUBJECT_PREFIX = '[ERP Django] '
+
+# Administradores que reciben alertas del sistema
+ADMINS = [
+    ('Admin ERP', env('ADMIN_EMAIL', default='admin@erp-django.com')),
+]
+
+# Configuración de django-anymail (SendGrid)
+SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
+ANYMAIL = {
+    'SENDGRID_API_KEY': SENDGRID_API_KEY,
+    # Reintentar envíos fallidos automáticamente
+    'SEND_DEFAULTS': {
+        'esp_extra': {'ip_pool_name': 'transactional'},
+    },
 }
 
 JAZZMIN_SETTINGS = {
