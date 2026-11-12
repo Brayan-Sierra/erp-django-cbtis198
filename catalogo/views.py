@@ -22,6 +22,8 @@ from .checkout_utils import (
     obtener_o_crear_cliente,
 )
 from .filters import ProductoFilter
+from ventas.tasks import enviar_confirmacion_pedido
+
 
 # Configurar la clave secreta de Stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -260,16 +262,29 @@ def checkout(request):
     })
 
 def pago_exitoso(request, pedido_id: int):
-    """Vista de confirmación post-pago exitoso."""
+    """Vista de confirmación post-pago exitoso — W16.
+
+    Cambios respecto a W14:
+        Dispara la tarea asíncrona de correo con .delay().
+        La tarea se encola en Redis y el worker la procesa
+        en segundo plano, sin bloquear esta respuesta HTTP.
+    """
+    from django.shortcuts import get_object_or_404
     pedido = get_object_or_404(Pedido, pk=pedido_id)
 
+    # Vaciar el carrito de la sesión
     _guardar_carrito(request, {})
-    
-    total_monto = getattr(pedido, 'total_pagado', getattr(pedido, 'total', '0.00'))
+
+    # ── NUEVO W16: disparar tarea asíncrona de confirmación ───────────
+    # .delay() envía la tarea al broker Redis de forma no bloqueante.
+    # El worker la ejecutará en segundo plano.
+    enviar_confirmacion_pedido.delay(pedido.pk)
+    # ──────────────────────────────────────────────────────────────────
+
     messages.success(
         request,
         f'¡Pago exitoso! Tu pedido {pedido.numero_pedido} '
-        f'está confirmado. Total: ${total_monto}'
+        f'está confirmado. Recibirás un correo de confirmación pronto.'
     )
 
     return render(request, 'catalogo/pago_exitoso.html', {
