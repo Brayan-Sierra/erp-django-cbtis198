@@ -87,8 +87,6 @@ LOGGING = {
     },
 }
 
-# core/settings_prod.py — agregar al final, después de los SECURE_* headers:
-
 # ── ALMACENAMIENTO DE ARCHIVOS MEDIA (producción) ─────────────────────────
 # Usar django-storages con S3 para persistir archivos entre deploys.
 # Configurar estas variables en el dashboard de Render:
@@ -112,15 +110,10 @@ if _bucket:
     AWS_QUERYSTRING_AUTH  = False       # URLs públicas (sin firma)
     MEDIA_URL             = f'https://{_bucket}.s3.amazonaws.com/'
 
-# core/settings_prod.py — agregar:
-
-# En producción: usar SendGrid via anymail
-EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
-
 # ── CELERY EN PRODUCCIÓN (sin Redis) ───────────────────────────────────────
-_redis_url = os.environ.get('REDIS_URL', '')
+_redis_url = os.environ.get('REDIS_URL', '').strip()
 
-if _redis_url:
+if _redis_url and ('localhost' not in _redis_url and '127.0.0.1' not in _redis_url):
     CELERY_BROKER_URL = _redis_url
     CELERY_RESULT_BACKEND = _redis_url
 else:
@@ -130,6 +123,7 @@ else:
     CELERY_RESULT_BACKEND = 'cache+memory://'
     CELERY_TASK_IGNORE_RESULT = True
 
+# ── CORREO ELECTRÓNICO ────────────────────────────────────────────────────
 # Usar SendGrid solo si hay API key configurada; si no, imprimir correo en consola de Render
 if os.environ.get('SENDGRID_API_KEY'):
     EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
