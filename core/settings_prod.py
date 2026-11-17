@@ -116,3 +116,22 @@ if _bucket:
 
 # En producción: usar SendGrid via anymail
 EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+
+# ── CELERY EN PRODUCCIÓN (sin Redis) ───────────────────────────────────────
+_redis_url = os.environ.get('REDIS_URL', '')
+
+if _redis_url:
+    CELERY_BROKER_URL = _redis_url
+    CELERY_RESULT_BACKEND = _redis_url
+else:
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_TASK_EAGER_PROPAGATES = True
+    CELERY_BROKER_URL = 'memory://'
+    CELERY_RESULT_BACKEND = 'cache+memory://'
+    CELERY_TASK_IGNORE_RESULT = True
+
+# Usar SendGrid solo si hay API key configurada; si no, imprimir correo en consola de Render
+if os.environ.get('SENDGRID_API_KEY'):
+    EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
