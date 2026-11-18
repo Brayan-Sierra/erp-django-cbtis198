@@ -262,24 +262,17 @@ def checkout(request):
     })
 
 def pago_exitoso(request, pedido_id: int):
-    """Vista de confirmación post-pago exitoso — W16.
-
-    Cambios respecto a W14:
-        Dispara la tarea asíncrona de correo con .delay().
-        La tarea se encola en Redis y el worker la procesa
-        en segundo plano, sin bloquear esta respuesta HTTP.
-    """
-    from django.shortcuts import get_object_or_404
+    """Vista de confirmación post-pago exitoso."""
     pedido = get_object_or_404(Pedido, pk=pedido_id)
 
     # Vaciar el carrito de la sesión
     _guardar_carrito(request, {})
 
-    # ── NUEVO W16: disparar tarea asíncrona de confirmación ───────────
-    # .delay() envía la tarea al broker Redis de forma no bloqueante.
-    # El worker la ejecutará en segundo plano.
-    enviar_confirmacion_pedido.delay(pedido.pk)
-    # ──────────────────────────────────────────────────────────────────
+    # Ejecutar el envío directamente (síncrono) sin depender de Redis/Celery
+    try:
+        enviar_confirmacion_pedido(pedido.pk)
+    except Exception as e:
+        print(f"Error enviando correo del pedido {pedido.pk}: {e}")
 
     messages.success(
         request,
@@ -290,7 +283,6 @@ def pago_exitoso(request, pedido_id: int):
     return render(request, 'catalogo/pago_exitoso.html', {
         'pedido': pedido,
     })
-
 
 def pago_error(request):
     """Vista de error de pago."""
