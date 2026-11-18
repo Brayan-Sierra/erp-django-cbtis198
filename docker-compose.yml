@@ -1,4 +1,4 @@
-# docker-compose.yml — versión W16 completa
+# docker-compose.yml — versión W18 completa
 version: '3.9'
 
 services:
@@ -80,8 +80,26 @@ services:
       SECRET_KEY:             dev-clave-docker-no-usar-en-produccion
       DATABASE_URL:           postgres://erp_user:erp_pass_local@db:5432/erp_db
       REDIS_URL:              redis://redis:6379/0
-      # Variables de correo (se completarán en W17)
       SENDGRID_API_KEY:       placeholder
+
+  # ── Celery Beat — Scheduler de tareas programadas — W18 ────────────
+  celery_beat:
+    build: .
+    restart: unless-stopped
+    # Beat NUNCA debe tener múltiples réplicas (un solo scheduler)
+    command: celery -A core beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings_prod
+      SECRET_KEY:             dev-clave-docker-no-usar-en-produccion
+      DATABASE_URL:           postgres://erp_user:erp_pass_local@db:5432/erp_db
+      REDIS_URL:              redis://redis:6379/0
 
   # ── Flower — Monitor de Celery — W16 ───────────────────────────────
   flower:

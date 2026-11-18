@@ -268,9 +268,9 @@ def pago_exitoso(request, pedido_id: int):
     # Vaciar el carrito de la sesión
     _guardar_carrito(request, {})
 
-    # Ejecutar el envío directamente (síncrono) sin depender de Redis/Celery
+    # Disparar tarea (síncrona automáticamente en Render gracias a CELERY_TASK_ALWAYS_EAGER=True)
     try:
-        enviar_confirmacion_pedido(pedido.pk)
+        enviar_confirmacion_pedido.delay(pedido.pk)
     except Exception as e:
         print(f"Error enviando correo del pedido {pedido.pk}: {e}")
 
