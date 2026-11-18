@@ -118,14 +118,14 @@ if _redis_url and ('localhost' not in _redis_url and '127.0.0.1' not in _redis_u
     CELERY_RESULT_BACKEND = _redis_url
 else:
     CELERY_TASK_ALWAYS_EAGER = True
-    CELERY_TASK_EAGER_PROPAGATES = True
+    CELERY_TASK_EAGER_PROPAGATES = False
     CELERY_BROKER_URL = 'memory://'
     CELERY_RESULT_BACKEND = 'cache+memory://'
     CELERY_TASK_IGNORE_RESULT = True
 
 # ── CORREO ELECTRÓNICO ────────────────────────────────────────────────────
-# Usar SendGrid solo si hay API key configurada; si no, imprimir correo en consola de Render
-if os.environ.get('SENDGRID_API_KEY'):
+# Usar SendGrid solo si se activa explícitamente; si no, imprimir correo en logs de Render
+if os.environ.get('USE_SENDGRID', '').lower() == 'true' and os.environ.get('SENDGRID_API_KEY'):
     EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
