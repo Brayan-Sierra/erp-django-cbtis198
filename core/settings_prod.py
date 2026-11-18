@@ -58,8 +58,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'same-origin'
 
 # ── ARCHIVOS ESTÁTICOS ─────────────────────────────────────────────────────
-# WhiteNoise ya configurado en settings.py; solo confirmar almacenamiento
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# CompressedStaticFilesStorage evita el Error 500 de Jazzmin con 'vendor/bootswatch'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # ── LOGGING: solo WARNING y superiores en producción ──────────────────────
 LOGGING = {
@@ -87,8 +87,6 @@ LOGGING = {
     },
 }
 
-# core/settings_prod.py — agregar al final, después de los SECURE_* headers:
-
 # ── ALMACENAMIENTO DE ARCHIVOS MEDIA (producción) ─────────────────────────
 # Usar django-storages con S3 para persistir archivos entre deploys.
 # Configurar estas variables en el dashboard de Render:
@@ -112,7 +110,22 @@ if _bucket:
     AWS_QUERYSTRING_AUTH  = False       # URLs públicas (sin firma)
     MEDIA_URL             = f'https://{_bucket}.s3.amazonaws.com/'
 
-# core/settings_prod.py — agregar:
+# ── CELERY EN PRODUCCIÓN (sin Redis) ───────────────────────────────────────
+_redis_url = os.environ.get('REDIS_URL', '').strip()
 
-# En producción: usar SendGrid via anymail
-EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+if _redis_url and ('localhost' not in _redis_url and '127.0.0.1' not in _redis_url):
+    CELERY_BROKER_URL = _redis_url
+    CELERY_RESULT_BACKEND = _redis_url
+else:
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_TASK_EAGER_PROPAGATES = False
+    CELERY_BROKER_URL = 'memory://'
+    CELERY_RESULT_BACKEND = 'cache+memory://'
+    CELERY_TASK_IGNORE_RESULT = True
+
+# ── CORREO ELECTRÓNICO ────────────────────────────────────────────────────
+# Usar SendGrid solo si se activa explícitamente; si no, imprimir correo en logs de Render
+if os.environ.get('USE_SENDGRID', '').lower() == 'true' and os.environ.get('SENDGRID_API_KEY'):
+    EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

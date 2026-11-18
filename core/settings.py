@@ -221,13 +221,10 @@ ADMINS = [
 ]
 
 # Configuración de django-anymail (SendGrid)
+# Configuración de django-anymail (SendGrid)
 SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
 ANYMAIL = {
     'SENDGRID_API_KEY': SENDGRID_API_KEY,
-    # Reintentar envíos fallidos automáticamente
-    'SEND_DEFAULTS': {
-        'esp_extra': {'ip_pool_name': 'transactional'},
-    },
 }
 
 JAZZMIN_SETTINGS = {
@@ -350,12 +347,23 @@ ACCOUNT_SESSION_REMEMBER       = True           # recordar sesión
 LOGOUT_REDIRECT_URL = '/'
 
 # ── CELERY — Cola de tareas asíncronas ────────────────────────────────────
-CELERY_BROKER_URL     = env('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
+_redis_url = env('REDIS_URL', default='').strip()
 
-CELERY_ACCEPT_CONTENT    = ['json']
-CELERY_TASK_SERIALIZER   = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+# Usar Redis solo si existe una URL externa real (nunca localhost en Render)
+if _redis_url and ('localhost' not in _redis_url and '127.0.0.1' not in _redis_url):
+    CELERY_BROKER_URL        = _redis_url
+    CELERY_RESULT_BACKEND    = _redis_url
+    CELERY_TASK_ALWAYS_EAGER = ('test' in sys.argv)
+else:
+    CELERY_BROKER_URL         = 'memory://'
+    CELERY_RESULT_BACKEND     = 'cache+memory://'
+    CELERY_TASK_ALWAYS_EAGER  = True
+    CELERY_TASK_IGNORE_RESULT = True
+
+CELERY_TASK_EAGER_PROPAGATES = True
+CELERY_ACCEPT_CONTENT        = ['json']
+CELERY_TASK_SERIALIZER       = 'json'
+CELERY_RESULT_SERIALIZER     = 'json'
 
 CELERY_TIMEZONE = TIME_ZONE
 
@@ -365,11 +373,3 @@ CELERY_TASK_SOFT_TIME_LIMIT = 300
 CELERY_TASK_TIME_LIMIT       = 360
 
 CELERY_TASK_DEFAULT_QUEUE = 'erp_django'
-
-# Para tests: ejecutar tareas sincrónicamente (sin worker ni Redis activo)
-if 'test' in sys.argv:
-    CELERY_TASK_ALWAYS_EAGER = True
-    CELERY_TASK_EAGER_PROPAGATES = True
-else:
-    CELERY_TASK_ALWAYS_EAGER = False
-    CELERY_TASK_EAGER_PROPAGATES = True
