@@ -221,13 +221,10 @@ ADMINS = [
 ]
 
 # Configuración de django-anymail (SendGrid)
+# Configuración de django-anymail (SendGrid)
 SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
 ANYMAIL = {
     'SENDGRID_API_KEY': SENDGRID_API_KEY,
-    # Reintentar envíos fallidos automáticamente
-    'SEND_DEFAULTS': {
-        'esp_extra': {'ip_pool_name': 'transactional'},
-    },
 }
 
 JAZZMIN_SETTINGS = {
