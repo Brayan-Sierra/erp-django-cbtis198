@@ -12,7 +12,8 @@ from django.views.generic import (
 
 from .forms import ProductoForm
 from .models import Producto
-
+from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView
 
 class ProductoListView(ListView):
     model = Producto
@@ -121,3 +122,60 @@ def exportar_excel(request):
     response['Content-Disposition'] = 'attachment; filename="inventario_productos.xlsx"'
     wb.save(response)
     return response
+
+# productos/views.py — agregar al final:
+
+class HistoricoProductoView(LoginRequiredMixin, TemplateView):
+    """Muestra el historial completo de cambios de un producto.
+
+    Útil para auditar cuándo y quién cambió el precio, el stock
+    o cualquier otro campo del producto.
+
+    Características:
+        - Lista todos los registros históricos (hasta 100).
+        - Compara cada registro con el anterior para resaltar cambios.
+        - Muestra el usuario responsable de cada cambio (si hay middleware).
+    """
+
+    template_name = 'productos/historico.html'
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Construye el contexto con el historial anotado con cambios."""
+        ctx = super().get_context_data(**kwargs)
+
+        producto = get_object_or_404(
+            Producto, pk=kwargs['producto_id']
+        )
+
+        # Obtener historial: más reciente primero, máximo 100 registros
+        registros_raw = list(producto.history.all()[:100])
+
+        # Anotar cada registro con los campos que cambiaron
+        # respecto al registro inmediatamente anterior (más antiguo)
+        registros_anotados = []
+        for i, registro in enumerate(registros_raw):
+            cambios = {}
+
+            if i < len(registros_raw) - 1:
+                # Hay un registro anterior con el que comparar
+                anterior = registros_raw[i + 1]
+                delta    = registro.diff_against(anterior)
+                for cambio in delta.changes:
+                    cambios[cambio.field] = {
+                        'anterior': cambio.old,
+                        'nuevo':    cambio.new,
+                    }
+
+            registros_anotados.append({
+                'registro':      registro,
+                'cambios':       cambios,
+                'es_creacion':   registro.history_type == '+',
+                'es_borrado':    registro.history_type == '-',
+                'precio_cambio': 'precio' in cambios,
+                'stock_cambio':  'stock'  in cambios,
+            })
+
+        ctx['producto']   = producto
+        ctx['registros']  = registros_anotados
+        ctx['total']      = producto.history.count()
+        return ctx

@@ -19,7 +19,7 @@ from django.db import models
 
 from clientes.models  import Cliente
 from productos.models import Producto
-
+from simple_history.models import HistoricalRecords
 
 # ── Venta ─────────────────────────────────────────────────────────────────
 
@@ -39,6 +39,7 @@ class Venta(models.Model):
     fecha   = models.DateTimeField(
         auto_now_add=True, verbose_name='Fecha'
     )
+    history = HistoricalRecords(verbose_name='Historial de venta')
 
     class Meta:
         verbose_name        = 'Venta'
@@ -204,6 +205,7 @@ class Pedido(models.Model):
         verbose_name='Correo de confirmación enviado',
         help_text='True cuando se envió el correo de confirmación al cliente.'
     )
+    history = HistoricalRecords(verbose_name='Historial de pedido')
 
 
     class Meta:

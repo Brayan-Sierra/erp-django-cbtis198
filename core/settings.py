@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',    # ← agregar
     'anymail',    # ← agregar
     'django_filters',              # ← nuevo (nombre de app es django_filters)
+    'simple_history',
     'whitenoise.runserver_nostatic',
     # Apps del ERP
     'clientes',
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',   # ← agregar al final
+    'simple_history.middleware.HistoryRequestMiddleware',  # ← agregar al final
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -422,3 +424,13 @@ else:
             'TIMEOUT':  300,
         }
     }
+
+# core/settings.py — agregar al final, junto a las demás configuraciones:
+
+# ── DJANGO-SIMPLE-HISTORY ──────────────────────────────────────────────────
+# No mostrar el botón "Revertir" en el admin — solo auditoria, no rollback
+SIMPLE_HISTORY_REVERT_DISABLED = True
+
+# Número máximo de registros históricos a conservar por objeto (None = ilimitado)
+# En producción con alta actividad, considerar un límite para controlar el tamaño de la BD
+SIMPLE_HISTORY_HISTORY_CHANGE_REASON_CONTEXT_VARIABLE = 'history_change_reason'

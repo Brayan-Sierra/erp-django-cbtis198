@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% block title %}Historial de cambios — {{ producto.nombre }}{% endblock %}
+{% block nav_productos %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Estilos específicos del historial ────────────────────── */
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+        margin: 1rem 0;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: .55rem;
+        top: 0; bottom: 0;
+        width: 2px;
+        background: var(--clr-border);
+    }
+    .timeline-item {
+        position: relative;
+        margin-bottom: 1.2rem;
+        padding-left: 1rem;
+    }
+    .timeline-dot {
+        position: absolute;
+        left: -1.6rem;
+        top: .3rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid var(--clr-navy);
+        background: var(--clr-surface);
+    }
+    .timeline-dot.creacion { background: var(--clr-ok);      border-color: var(--clr-ok); }
+    .timeline-dot.borrado   { background: var(--clr-danger);  border-color: var(--clr-danger); }
+    .timeline-dot.precio    { background: var(--clr-gold);    border-color: var(--clr-gold); }
+    .timeline-dot.stock     { background: var(--clr-sky);     border-color: var(--clr-sky); }
+
+    .registro-card {
+        background: var(--clr-surface);
+        border: 1px solid var(--clr-border);
+        border-radius: 8px;
+        padding: .75rem 1rem;
+        box-shadow: var(--shadow-sm);
+    }
+    .registro-header {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        margin-bottom: .4rem;
+    }
+    .badge-tipo {
+        font-size: .72rem;
+        font-weight: 700;
+        padding: .15rem .5rem;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+    .badge-creacion { background: #D4EDDA; color: #155724; }
+    .badge-edicion  { background: var(--clr-ice); color: var(--clr-navy); }
+    .badge-borrado  { background: #F8D7DA; color: #721C24; }
+
+    .cambio-row {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .85rem;
+        padding: .25rem 0;
+        border-bottom: 1px dashed var(--clr-border);
+    }
+    .cambio-row:last-child { border-bottom: none; }
+    .cambio-field  { font-weight: 600; color: var(--clr-navy); min-width: 80px; }
+    .cambio-old    { color: var(--clr-muted); text-decoration: line-through; }
+    .cambio-arrow  { color: var(--clr-muted); }
+    .cambio-new    { font-weight: 600; }
+    .cambio-new.precio-sube   { color: var(--clr-danger); }
+    .cambio-new.precio-baja   { color: var(--clr-ok); }
+    .cambio-new.stock-sube    { color: var(--clr-ok); }
+    .cambio-new.stock-baja    { color: var(--clr-danger); }
+
+    .kpi-historia {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .kpi-hist-tile {
+        background: var(--clr-surface);
+        border: 1px solid var(--clr-border);
+        border-radius: 8px;
+        padding: .75rem 1.25rem;
+        text-align: center;
+        min-width: 120px;
+    }
+    .kpi-hist-valor { font-size: 1.4rem; font-weight: 700; color: var(--clr-navy); }
+    .kpi-hist-label { font-size: .72rem; color: var(--clr-muted); text-transform: uppercase; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="erp-page-title">
+    <h2>📜 Historial de cambios</h2>
+    <span style="margin-left:auto;color:var(--clr-muted);font-size:.85rem;">
+        {{ producto.nombre }}
+    </span>
+    <a href="{% url 'productos:detalle' producto.pk %}"
+       class="btn-erp-primary">← Volver al producto</a>
+</div>
+
+<!-- Datos actuales del producto -->
+<div class="erp-card" style="margin-bottom:1.5rem;">
+    <div class="erp-card-header">Estado actual del producto</div>
+    <div style="display:flex;gap:2rem;padding:.5rem 0;">
+        <div>
+            <span class="erp-label">Precio actual</span>
+            <p style="font-size:1.2rem;font-weight:700;color:var(--clr-gold);margin:0;">
+                ${{ producto.precio }}
+            </p>
+        </div>
+        <div>
+            <span class="erp-label">Stock actual</span>
+            <p style="font-size:1.2rem;font-weight:700;color:var(--clr-navy);margin:0;">
+                {{ producto.stock }} unidades
+            </p>
+        </div>
+        <div>
+            <span class="erp-label">Estado</span>
+            <p style="margin:0;">
+                {% if producto.activo %}
+                    <span class="badge-erp-active">Activo</span>
+                {% else %}
+                    <span class="badge-erp-inactive">Inactivo</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- KPIs del historial -->
+{% with cambios_precio=registros|length %}
+<div class="kpi-historia">
+    <div class="kpi-hist-tile">
+        <div class="kpi-hist-valor">{{ total }}</div>
+        <div class="kpi-hist-label">Total de cambios</div>
+    </div>
+    <div class="kpi-hist-tile">
+        <div class="kpi-hist-valor">
+            {% with cnt=0 %}
+            {% for r in registros %}{% if r.precio_cambio %}{% with cnt=cnt|add:1 %}{% endwith %}{% endif %}{% endfor %}
+            {{ registros|length }}
+            {% endwith %}
+        </div>
+        <div class="kpi-hist-label">Registros mostrados</div>
+    </div>
+</div>
+{% endwith %}
+
+<!-- Timeline de historial -->
+{% if registros %}
+<div class="erp-card">
+    <div class="erp-card-header">Línea de tiempo de cambios</div>
+    <div class="timeline" style="margin-top:1rem;">
+        {% for item in registros %}
+        <div class="timeline-item">
+            <!-- Punto de color en la línea -->
+            <div class="timeline-dot
+                {% if item.es_creacion %}creacion
+                {% elif item.es_borrado %}borrado
+                {% elif item.precio_cambio %}precio
+                {% elif item.stock_cambio %}stock
+                {% endif %}">
+            </div>
+
+            <div class="registro-card">
+                <!-- Encabezado del registro -->
+                <div class="registro-header">
+                    {% if item.es_creacion %}
+                        <span class="badge-tipo badge-creacion">✅ Creación</span>
+                    {% elif item.es_borrado %}
+                        <span class="badge-tipo badge-borrado">🗑️ Borrado</span>
+                    {% else %}
+                        <span class="badge-tipo badge-edicion">✏️ Modificación</span>
+                    {% endif %}
+
+                    <span style="color:var(--clr-muted);font-size:.82rem;">
+                        {{ item.registro.history_date|date:"d/m/Y H:i:s" }}
+                    </span>
+
+                    {% if item.registro.history_user %}
+                        <span style="color:var(--clr-sky);font-size:.82rem;margin-left:auto;">
+                            👤 {{ item.registro.history_user.username }}
+                        </span>
+                    {% else %}
+                        <span style="color:var(--clr-muted);font-size:.78rem;margin-left:auto;">
+                            Sistema / shell
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Campos en el momento del cambio -->
+                <div style="font-size:.83rem;color:var(--clr-muted);margin-bottom:.5rem;">
+                    Precio: <strong style="color:var(--clr-gold);">${{ item.registro.precio }}</strong>
+                    &nbsp;·&nbsp;
+                    Stock: <strong>{{ item.registro.stock }}</strong>
+                    {% if item.registro.history_change_reason %}
+                    &nbsp;·&nbsp;
+                    Motivo: <em>{{ item.registro.history_change_reason }}</em>
+                    {% endif %}
+                </div>
+
+                <!-- Detalle de cambios respecto al estado anterior -->
+                {% if item.cambios %}
+                <div style="margin-top:.4rem;">
+                    {% for campo, valores in item.cambios.items %}
+                    <div class="cambio-row">
+                        <span class="cambio-field">{{ campo }}</span>
+                        <span class="cambio-old">{{ valores.anterior }}</span>
+                        <span class="cambio-arrow">→</span>
+                        {% if campo == 'precio' %}
+                            {% if valores.nuevo > valores.anterior %}
+                                <span class="cambio-new precio-sube">
+                                    {{ valores.nuevo }} ▲
+                                </span>
+                            {% else %}
+                                <span class="cambio-new precio-baja">
+                                    {{ valores.nuevo }} ▼
+                                </span>
+                            {% endif %}
+                        {% elif campo == 'stock' %}
+                            {% if valores.nuevo > valores.anterior %}
+                                <span class="cambio-new stock-sube">
+                                    {{ valores.nuevo }} ▲
+                                </span>
+                            {% else %}
+                                <span class="cambio-new stock-baja">
+                                    {{ valores.nuevo }} ▼
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            <span class="cambio-new">{{ valores.nuevo }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if total > 100 %}
+<p style="color:var(--clr-muted);font-size:.85rem;margin-top:.75rem;text-align:center;">
+    Mostrando los 100 cambios más recientes de {{ total }} totales.
+</p>
+{% endif %}
+
+{% else %}
+<div class="erp-alert-info">
+    No hay historial de cambios registrado para este producto aún.
+</div>
+{% endif %}
+{% endblock %}

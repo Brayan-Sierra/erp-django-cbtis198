@@ -10,6 +10,11 @@
            class="btn-erp-gold ms-auto">Editar</a>
         <a href="{% url 'productos:eliminar' producto.pk %}"
            class="btn-erp-danger">Eliminar</a>
+        <a href="{% url 'productos:historico' producto.pk %}"
+           class="btn-erp-primary"
+           title="Ver historial de cambios de precio y stock">
+            📜 Historial
+        </a>
     {% endif %}
 </div>
 

@@ -7,7 +7,8 @@ from django.db import models
 
 from proveedores.models import Proveedor
 from .validators import validar_imagen_producto  # ← Import del validador de W11
-
+# productos/models.py — agregar import:
+from simple_history.models import HistoricalRecords
 
 class Categoria(models.Model):
     """Categoría para clasificar productos del catálogo."""
@@ -76,6 +77,13 @@ class Producto(models.Model):
     
     creado = models.DateTimeField(
         auto_now_add=True, verbose_name='Fecha de registro'
+    )
+
+    history = HistoricalRecords(
+        verbose_name='Historial de cambios',
+        history_change_reason_field=models.TextField(null=True),
+        # Rastrear cambios de los campos más relevantes para auditoría
+        # (por defecto rastrea TODOS los campos del modelo)
     )
 
     class Meta:
