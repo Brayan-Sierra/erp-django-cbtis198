@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block nav_reportes %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    @media (max-width: 900px) {
+        .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .kpi-tile {
+        background: var(--clr-surface);
+        border: 1px solid var(--clr-border);
+        border-radius: 10px;
+        padding: 1.1rem;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+    }
+    .kpi-tile .valor {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--clr-navy);
+    }
+    [data-theme="dark"] .kpi-tile .valor { color: var(--clr-sky); }
+    .kpi-tile.gold .valor { color: #B8860B; }
+    [data-theme="dark"] .kpi-tile.gold .valor { color: var(--clr-gold); }
+    .kpi-tile .etiqueta {
+        font-size: .76rem;
+        color: var(--clr-muted);
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        margin-top: .3rem;
+    }
+    .kpi-tile.alerta { border-color: var(--clr-danger); }
+    .kpi-tile.alerta .valor { color: var(--clr-danger); }
+    .chart-card {
+        background: var(--clr-surface);
+        border: 1px solid var(--clr-border);
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 1.5rem;
+    }
+    .chart-card h4 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        color: var(--clr-navy);
+        margin: 0 0 1rem;
+    }
+    [data-theme="dark"] .chart-card h4 { color: var(--clr-sky); }
+    .cache-badge {
+        font-size: .72rem;
+        color: var(--clr-muted);
+        background: var(--clr-ice);
+        padding: .2rem .6rem;
+        border-radius: 12px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="erp-page-title">
+    <h2>📊 Dashboard</h2>
+    <span class="cache-badge ms-auto">
+        ⚡ Datos cacheados {{ cache_ttl_minutos }} min
+    </span>
+</div>
+
+<!-- ── 5 KPI TILES ──────────────────────────────────────────────── -->
+<div class="kpi-grid">
+    <div class="kpi-tile gold">
+        <div class="valor">${{ ventas_dia_total }}</div>
+        <div class="etiqueta">Ventas de hoy</div>
+    </div>
+    <div class="kpi-tile">
+        <div class="valor">{{ clientes_nuevos }}</div>
+        <div class="etiqueta">Clientes nuevos hoy</div>
+    </div>
+    <div class="kpi-tile {% if stock_critico > 0 %}alerta{% endif %}">
+        <div class="valor">{{ stock_critico }}</div>
+        <div class="etiqueta">Productos en stock crítico</div>
+    </div>
+    <div class="kpi-tile">
+        <div class="valor">{{ pedidos_pendientes }}</div>
+        <div class="etiqueta">Pedidos pendientes</div>
+    </div>
+    <div class="kpi-tile gold">
+        <div class="valor">${{ revenue_mensual }}</div>
+        <div class="etiqueta">Revenue del mes</div>
+    </div>
+</div>
+
+<!-- ── GRÁFICA 1: VENTAS ÚLTIMOS 7 DÍAS (LÍNEA) ────────────────── -->
+<div class="chart-card">
+    <h4>📈 Ventas de los últimos 7 días</h4>
+    <canvas id="chartVentasDias" height="90"></canvas>
+</div>
+
+<div class="row">
+    <!-- ── GRÁFICA 2: TOP 5 PRODUCTOS (BARRAS) ─────────────────── -->
+    <div class="col-md-7">
+        <div class="chart-card">
+            <h4>🏆 Top 5 productos por ingreso</h4>
+            <canvas id="chartTopProductos" height="180"></canvas>
+        </div>
+    </div>
+    <!-- ── GRÁFICA 3: VENTAS POR CATEGORÍA (DONA) ──────────────── -->
+    <div class="col-md-5">
+        <div class="chart-card">
+            <h4>🍩 Ventas por categoría</h4>
+            <canvas id="chartCategorias" height="180"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    // ── Paleta Fable 5 AzulERP para las gráficas ───────────────────
+    const PALETA = ['#0A2342', '#B8860B', '#4A90D9', '#1B4F8A', '#D4A017',
+                     '#6BAEE8', '#E8C547'];
+
+    const datosDias       = JSON.parse('{{ chart_dias_json|escapejs }}');
+    const datosProductos  = JSON.parse('{{ chart_productos_json|escapejs }}');
+    const datosCategorias = JSON.parse('{{ chart_categorias_json|escapejs }}');
+
+    // ── Gráfica 1: Línea — Ventas últimos 7 días ───────────────────
+    new Chart(document.getElementById('chartVentasDias'), {
+        type: 'line',
+        data: {
+            labels: datosDias.labels,
+            datasets: [{
+                label: 'Ventas ($)',
+                data: datosDias.data,
+                borderColor: '#B8860B',
+                backgroundColor: 'rgba(184,134,11,.12)',
+                tension: .3,
+                fill: true,
+                pointBackgroundColor: '#0A2342',
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true,
+                     ticks: { callback: v => '$' + v } }
+            }
+        }
+    });
+
+    // ── Gráfica 2: Barras — Top 5 productos ────────────────────────
+    new Chart(document.getElementById('chartTopProductos'), {
+        type: 'bar',
+        data: {
+            labels: datosProductos.labels,
+            datasets: [{
+                label: 'Ingreso ($)',
+                data: datosProductos.data,
+                backgroundColor: PALETA,
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { beginAtZero: true,
+                     ticks: { callback: v => '$' + v } }
+            }
+        }
+    });
+
+    // ── Gráfica 3: Dona — Ventas por categoría ──────────────────────
+    new Chart(document.getElementById('chartCategorias'), {
+        type: 'doughnut',
+        data: {
+            labels: datosCategorias.labels,
+            datasets: [{
+                data: datosCategorias.data,
+                backgroundColor: PALETA,
+                borderWidth: 2,
+                borderColor: '#FFFFFF',
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom',
+                          labels: { font: { size: 11 } } }
+            }
+        }
+    });
+})();
+</script>
+{% endblock %}

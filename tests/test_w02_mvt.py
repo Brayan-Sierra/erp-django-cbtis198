@@ -1,12 +1,13 @@
-"""Suite de pruebas W02 — Patrón MVT: templates, vistas y estáticos (Actualizada para W07).
+"""Suite de pruebas W02 — Patrón MVT: templates, vistas y estáticos (Actualizada para W07 y W19).
 
 Ejecutar con:
     python manage.py test tests.test_w02_mvt --verbosity=2
 
 Resultado esperado:
-    Ran 12 tests in X.XXXs
+    Ran 13 tests in X.XXXs
     OK
 """
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
@@ -50,10 +51,12 @@ class TemplatesRenderTest(TestCase):
         self.assertTemplateUsed(response, 'ventas/lista.html')
 
     def test_reportes_usa_template_correcto(self):
-        """La vista de reportes debe usar reportes/index.html."""
+        """La vista de reportes autenticada debe usar reportes/dashboard.html."""
+        user = User.objects.create_user(username='tester_w02', password='123')
+        self.client.force_login(user)
         response = self.client.get(reverse('reportes:inicio'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'reportes/index.html')
+        self.assertTemplateUsed(response, 'reportes/dashboard.html')
 
 
 class ContextoBienvenidaTest(TestCase):

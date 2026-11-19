@@ -401,3 +401,23 @@ CELERY_BEAT_SCHEDULE = {
 
 # Necesario para que Beat use la zona horaria de Django (no UTC)
 CELERY_BEAT_TIMEZONE = TIME_ZONE   # 'America/Mexico_City'
+
+# ── CACHÉ — Redis (DB 1 separada del broker Celery) con fallback local ────
+_redis_cache_url = env('REDIS_CACHE_URL', default='').strip()
+
+if _redis_cache_url and ('localhost' not in _redis_cache_url and '127.0.0.1' not in _redis_cache_url):
+    CACHES = {
+        'default': {
+            'BACKEND':  'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': _redis_cache_url,
+            'TIMEOUT':  300,
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'erp-dashboard-cache',
+            'TIMEOUT':  300,
+        }
+    }
