@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Reporte de ventas{% endblock %}
+{% block nav_reportes %}active{% endblock %}
+
+{% block content %}
+<div class="erp-page-title">
+    <h2>📋 Reporte de ventas</h2>
+    <span style="margin-left:auto;color:var(--clr-muted);font-size:.85rem;">
+        {{ total_filtrado }} venta(s) encontradas
+    </span>
+</div>
+
+<!-- Filtros -->
+<div class="erp-card" style="margin-bottom:1.5rem;">
+    <div class="erp-card-header">🔍 Filtrar reporte</div>
+    <form method="get" style="margin-top:.5rem;">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="erp-label">Rango de fechas</label>
+                {{ filtro.form.fecha }}
+            </div>
+            <div class="col-md-3">
+                <label class="erp-label">Cliente</label>
+                {{ filtro.form.cliente }}
+            </div>
+            <div class="col-md-3">
+                <label class="erp-label">Producto</label>
+                {{ filtro.form.producto }}
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn-erp-primary w-100">
+                    Filtrar
+                </button>
+            </div>
+        </div>
+        {% if request.GET %}
+        <div style="margin-top:.75rem;">
+            <a href="{% url 'reportes:reporte_ventas' %}"
+               style="color:var(--clr-muted);font-size:.85rem;">
+                ✕ Limpiar filtros
+            </a>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Botones de exportación — conservan los filtros activos -->
+<div class="d-flex gap-2 mb-3">
+    <a href="{% url 'reportes:exportar' %}?{{ request.GET.urlencode }}{% if request.GET %}&{% endif %}formato=excel"
+       class="btn-erp-gold">
+        📊 Exportar Excel
+    </a>
+    <a href="{% url 'reportes:exportar' %}?{{ request.GET.urlencode }}{% if request.GET %}&{% endif %}formato=pdf"
+       class="btn-erp-primary">
+        📄 Exportar PDF
+    </a>
+</div>
+
+<!-- Tabla de resultados -->
+{% if ventas %}
+<table class="erp-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Productos</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for v in ventas %}
+        <tr>
+            <td>
+                <a href="{% url 'ventas:detalle' v.pk %}"
+                   style="color:var(--clr-royal);font-weight:600;">
+                    #{{ v.pk }}
+                </a>
+            </td>
+            <td>{{ v.cliente.nombre }}</td>
+            <td>{{ v.fecha|date:"d/m/Y H:i" }}</td>
+            <td style="font-size:.85rem;color:var(--clr-muted);">
+                {% for d in v.detalles.all %}
+                    {{ d.producto.nombre }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td style="font-weight:600;color:var(--clr-gold);">
+                ${{ v.total }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Paginación (preserva filtros) -->
+{% if is_paginated %}
+<div style="display:flex;gap:.5rem;justify-content:center;margin-top:1.5rem;">
+    {% if page_obj.has_previous %}
+        <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}"
+           class="btn-erp-primary btn-erp-sm">← Anterior</a>
+    {% endif %}
+    <span style="padding:.35rem .75rem;color:var(--clr-muted);font-size:.88rem;">
+        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    </span>
+    {% if page_obj.has_next %}
+        <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.next_page_number }}"
+           class="btn-erp-primary btn-erp-sm">Siguiente →</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="erp-alert-info">
+    No se encontraron ventas con los filtros seleccionados.
+</div>
+{% endif %}
+{% endblock %}

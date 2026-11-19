@@ -14,6 +14,7 @@ environ.Env.read_env(BASE_DIR / '.env')
 SECRET_KEY  = env('SECRET_KEY', default='dev-key-insegura-solo-para-desarrollo')
 DEBUG       = env('DEBUG', default=True)
 ALLOWED_HOSTS = ['erp-django-cbtis198.onrender.com', 'localhost', '127.0.0.1']
+SITE_DOMAIN = env('SITE_DOMAIN', default='http://127.0.0.1:8000')
 # ── Apps instaladas ───────────────────────────────────────────────────────
 # core/settings.py — actualizar INSTALLED_APPS (terceros):
 INSTALLED_APPS = [

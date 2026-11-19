@@ -41,3 +41,19 @@ parametrizables, optimizado con caché Redis.
 | Exportación reportes filtrados Excel/PDF | ⏳ W20 |
 | django-filter en reportes | ⏳ W20 |
 | Histórico de precios (simple-history) | ⏳ W21 |
+
+## Sprint Backlog — actualización W20
+
+| Tarea | Estado |
+|---|---|
+| Dashboard + KPIs + Chart.js + caché | ✅ W19 |
+| reportes/filters.py: VentaReporteFilter | ✅ W20 |
+| reportes/models.py: ExportacionReporte + migración 0001 | ✅ W20 |
+| ReporteVentasView filtrable | ✅ W20 |
+| reportes/exports.py: funciones reutilizables Excel/PDF | ✅ W20 |
+| Exportación adaptativa (síncrona/asíncrona) | ✅ W20 |
+| reportes/tasks.py: generar_exportacion_async | ✅ W20 |
+| Correo con link de descarga | ✅ W20 |
+| 8 tests de reportes y exportación | ✅ W20 |
+| Histórico de precios (simple-history) | ⏳ W21 |
+| Sprint 6 Review + Retrospectiva + Hito M7 | ⏳ W21 |

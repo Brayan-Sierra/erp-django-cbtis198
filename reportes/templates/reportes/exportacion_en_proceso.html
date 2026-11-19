@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Exportación en proceso{% endblock %}
+
+{% block content %}
+<div style="display:flex;justify-content:center;align-items:center;
+            min-height:50vh;">
+    <div class="erp-card" style="max-width:480px;text-align:center;">
+        <div style="font-size:3rem;margin-bottom:1rem;">
+            {% if exportacion.completado %}✅{% else %}⏳{% endif %}
+        </div>
+
+        {% if exportacion.completado %}
+            <h3 style="color:var(--clr-navy);">¡Tu reporte está listo!</h3>
+            <p style="color:var(--clr-muted);margin:.75rem 0 1.5rem;">
+                Formato: {{ exportacion.get_formato_display }}
+            </p>
+            <a href="{{ exportacion.archivo.url }}"
+               class="btn-erp-gold" download>
+                ⬇️ Descargar ahora
+            </a>
+        {% elif exportacion.error %}
+            <h3 style="color:var(--clr-danger);">Error al generar el reporte</h3>
+            <p style="color:var(--clr-muted);margin:.75rem 0 1.5rem;">
+                {{ exportacion.error }}
+            </p>
+        {% else %}
+            <h3 style="color:var(--clr-navy);">Generando tu reporte…</h3>
+            <p style="color:var(--clr-muted);margin:.75rem 0 1.5rem;">
+                Tu reporte de {{ exportacion.get_formato_display }}
+                se está generando en segundo plano.
+                Te enviaremos un correo a
+                <strong>{{ exportacion.usuario.email }}</strong>
+                con el enlace de descarga.
+            </p>
+        {% endif %}
+
+        <a href="{% url 'reportes:reporte_ventas' %}"
+           class="btn-erp-primary">
+            ← Volver al reporte
+        </a>
+    </div>
+</div>
+{% endblock %}
