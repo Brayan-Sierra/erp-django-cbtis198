@@ -17,3 +17,10 @@ db.sqlite3
 # Archivos estáticos y de media
 staticfiles/
 media/
+
+# .gitignore — agregar:
+# Archivos de coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
