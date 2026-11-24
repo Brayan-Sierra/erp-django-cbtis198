@@ -1,4 +1,4 @@
-# productos/admin.py — actualizar ProductoAdmin:
+# productos/admin.py
 from django.contrib  import admin
 from django.utils.html import format_html
 from simple_history.admin import SimpleHistoryAdmin
@@ -14,16 +14,17 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 @admin.register(Producto)
 class ProductoAdmin(SimpleHistoryAdmin):
-    """Admin de productos con preview de imagen e historial — W11 / W21."""
+    """Admin de productos con preview de imagen e historial — W11 / W21 / W23."""
 
-    list_display   = ['pk', 'imagen_preview', 'nombre', 'precio',
-                      'stock', 'categoria', 'proveedor', 'activo']
-    search_fields  = ['nombre', 'categoria__nombre', 'proveedor__nombre']
-    list_filter    = ['activo', 'categoria']
-    list_editable  = ['precio', 'stock', 'activo']
-    readonly_fields = ['creado', 'imagen_preview_grande']
-    date_hierarchy  = 'creado'
-    ordering        = ['nombre']
+    list_display        = ['pk', 'imagen_preview', 'nombre', 'precio',
+                           'stock', 'categoria', 'proveedor', 'activo']
+    list_select_related = ('categoria', 'proveedor')
+    search_fields       = ['nombre', 'categoria__nombre', 'proveedor__nombre']
+    list_filter         = ['activo', 'categoria']
+    list_editable       = ['precio', 'stock', 'activo']
+    readonly_fields     = ['creado', 'imagen_preview_grande']
+    date_hierarchy      = 'creado'
+    ordering            = ['nombre']
 
     @admin.display(description='Imagen')
     def imagen_preview(self, obj: Producto) -> str:

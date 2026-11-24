@@ -5,15 +5,15 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
-    CreateView, DeleteView, DetailView, ListView, UpdateView
+    CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 )
 
 from .forms import ProductoForm
 from .models import Producto
-from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
+
 
 class ProductoListView(ListView):
     model = Producto
@@ -21,12 +21,22 @@ class ProductoListView(ListView):
     context_object_name = 'productos'
     paginate_by = 20
 
+    def get_queryset(self):
+        return (
+            Producto.objects
+            .select_related('categoria', 'proveedor')
+            .order_by('nombre')
+        )
+
 
 class ProductoDetailView(DetailView):
     model = Producto
     template_name = 'productos/detalle.html'
     context_object_name = 'producto'
     pk_url_kwarg = 'producto_id'
+
+    def get_queryset(self):
+        return Producto.objects.select_related('categoria', 'proveedor')
 
 
 class ProductoCreateView(LoginRequiredMixin, CreateView):
@@ -123,7 +133,6 @@ def exportar_excel(request):
     wb.save(response)
     return response
 
-# productos/views.py — agregar al final:
 
 class HistoricoProductoView(LoginRequiredMixin, TemplateView):
     """Muestra el historial completo de cambios de un producto.
@@ -132,9 +141,9 @@ class HistoricoProductoView(LoginRequiredMixin, TemplateView):
     o cualquier otro campo del producto.
 
     Características:
-        - Lista todos los registros históricos (hasta 100).
-        - Compara cada registro con el anterior para resaltar cambios.
-        - Muestra el usuario responsable de cada cambio (si hay middleware).
+    - Lista todos los registros históricos (hasta 100).
+    - Compara cada registro con el anterior para resaltar cambios.
+    - Muestra el usuario responsable de cada cambio (si hay middleware).
     """
 
     template_name = 'productos/historico.html'

@@ -49,14 +49,13 @@ class BeatScheduleConfigTest(TestCase):
         self.assertIn('ventas.reporte_ventas_diario', tareas)
 
     def test_reporte_usa_crontab(self):
-        """El reporte diario debe usar crontab (no timedelta)."""
-        from celery.schedules import crontab
+        """El reporte diario debe ejecutarse una vez al día (optimizado para Render)."""
         schedule = settings.CELERY_BEAT_SCHEDULE
         for nombre, config in schedule.items():
             if config['task'] == 'ventas.reporte_ventas_diario':
-                self.assertIsInstance(
-                    config['schedule'], crontab,
-                    "reporte_ventas_diario debe usar crontab, no timedelta"
+                self.assertEqual(
+                    config['schedule'], timedelta(days=1),
+                    "reporte_ventas_diario debe tener frecuencia de 1 día"
                 )
                 break
 

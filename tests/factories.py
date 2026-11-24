@@ -46,9 +46,7 @@ class ProveedorFactory(DjangoModelFactory):
 
     nombre   = Faker('company', locale='es_MX')
     contacto = Faker('name', locale='es_MX')
-    correo   = factory.LazyAttribute(
-        lambda o: f"contacto@{o.nombre.lower().replace(' ', '')[:12]}.com"
-    )
+    correo   = factory.Sequence(lambda n: f'proveedor{n}@erp-test.com')
     telefono = Faker('phone_number', locale='es_MX')
     activo   = True
 
