@@ -388,7 +388,7 @@ CELERY_BEAT_SCHEDULE = {
     # Temporal para prueba inmediata (luego regresar a timedelta(hours=1))
     'verificar-stock-bajo-cada-hora': {
         'task':     'ventas.verificar_stock_bajo',
-        'schedule': timedelta(minutes=3),
+        'schedule': timedelta(days=1),
         'args':     (5,),   # umbral = 5 unidades
         'options':  {'queue': 'erp_django'},
     },
@@ -396,7 +396,7 @@ CELERY_BEAT_SCHEDULE = {
     # Temporal para prueba inmediata (luego regresar a crontab(hour=8, minute=0))
     'reporte-ventas-diario-8am': {
         'task':     'ventas.reporte_ventas_diario',
-        'schedule': timedelta(minutes=3),
+        'schedule': timedelta(days=1),
         'options':  {'queue': 'erp_django'},
     },
 
