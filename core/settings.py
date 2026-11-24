@@ -385,23 +385,22 @@ from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
 
-    # Verificar stock bajo cada hora
+    # Temporal para prueba inmediata (luego regresar a timedelta(hours=1))
     'verificar-stock-bajo-cada-hora': {
         'task':     'ventas.verificar_stock_bajo',
-        'schedule': timedelta(hours=1),
+        'schedule': timedelta(minutes=3),
         'args':     (5,),   # umbral = 5 unidades
         'options':  {'queue': 'erp_django'},
     },
 
-    # Reporte de ventas diario a las 8:00 AM (hora México)
+    # Temporal para prueba inmediata (luego regresar a crontab(hour=8, minute=0))
     'reporte-ventas-diario-8am': {
         'task':     'ventas.reporte_ventas_diario',
-        'schedule': crontab(hour=8, minute=0),
+        'schedule': timedelta(minutes=3),
         'options':  {'queue': 'erp_django'},
     },
 
 }
-
 # Necesario para que Beat use la zona horaria de Django (no UTC)
 CELERY_BEAT_TIMEZONE = TIME_ZONE   # 'America/Mexico_City'
 
